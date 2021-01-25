@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
 import { BsContext, playSound } from "../stateManager/stateManager";
 import styled, { keyframes } from 'styled-components'
-import { inspect_hit, update_board_hit, update_board_miss } from "../logic/logic";
+import { inspectHit, hitBoardUpdate, missBoardUpdate } from "../logic/logic";
 import { SINK, SHIP_PART, HIT, MISS } from "../stateManager/stateManager";
 import OpponentPixel from "./OpponentPixel";
 import { GridWrapper, OtherPlayerGrid, GridHeaders, LittleWrapper, LettersBar, NumbersBar, BarPixel } from "../styles/GlobalStyles";
@@ -67,7 +67,7 @@ const OpponentGrid = () => {
   const pixelStatus = (x, y, board, ships) => {
     const pixel = board[x][y];
     if (ships && pixel.value === SHIP_PART) {
-      return ships[pixel.ship_index].is_sunk ? SINK : pixel.is_hit ? HIT : pixel.value;
+      return ships[pixel.shipIndex].isSunk ? SINK : pixel.isHit ? HIT : pixel.value;
     }
     return pixel.value;
   }
@@ -83,10 +83,10 @@ const OpponentGrid = () => {
       setNoteStatus("Its not your turn!");
     } else {
       if (!isItemLocked(x, y)) {
-        const result = inspect_hit(otherPlayerBoard, x, y);
+        const result = inspectHit(otherPlayerBoard, x, y);
         setPlayerGuess({ x, y, result });
         if (result === MISS) {
-          updated = update_board_miss(otherPlayerBoard, x, y);
+          updated = missBoardUpdate(otherPlayerBoard, x, y);
           setOtherPlayerBoard(updated);
           setIsMyTurn(false);
           setTimeout(() => {
@@ -96,7 +96,7 @@ const OpponentGrid = () => {
             setNoteStatus('MISS');
           }, 100);
         } else if (result === HIT) {
-          updated = update_board_hit(x, y, otherPlayerBoard[x][y].ship_index, otherPlayerBoard, otherPlayerShips)
+          updated = hitBoardUpdate(x, y, otherPlayerBoard[x][y].shipIndex, otherPlayerBoard, otherPlayerShips)
 
           if (updated.sunk) {
             setNoteStatus('SINK!')
@@ -106,7 +106,7 @@ const OpponentGrid = () => {
             setNoteStatus('HIT!');
             setOpponentPrecents(opponentPrecents + 1);
           }
-          if (updated.is_win) {
+          if (updated.isWin) {
 
             setWinning(true);
             setTimeout(() => {

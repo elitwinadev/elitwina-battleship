@@ -7,6 +7,7 @@ import { flash, __esModule } from 'react-animations';
 import { Button } from "../styles/GlobalStyles";
 import { nanoid } from "nanoid";
 import FadeoutStatus from "./FadeoutStatus";
+import { useHistory } from "react-router-dom";
 import {
   BrowserRouter as Router,
   Switch,
@@ -52,6 +53,7 @@ const Input = () => {
     bothPlayersReady,
     lockOtherPlayerBoard,
     setRandomBoard,
+    randomBoard,
     gameStatus,
     setGameStatus,
     winning,
@@ -71,6 +73,7 @@ const Input = () => {
     playSounds,
     playAgainMsg
   } = useContext(BsContext);
+  const history = useHistory();
   // local states:
   const [roomId, setRoomId] = useState(null);
 
@@ -88,7 +91,7 @@ const Input = () => {
     playSound('click', playSounds);
     setMouseX(event.screenX);
     setMouseY(event.screenY);
-    navigator.clipboard.writeText(window.location.origin + "/" + roomId).then(function () {
+    navigator.clipboard.writeText(`${window.location.origin}/${roomId}`).then(function () {
       setNoteStatus("Id copied to clipboard!");
     });
     event.preventDefault();
@@ -104,7 +107,7 @@ const Input = () => {
   // connect the player to the room
   const startClick = () => {
     playSound('click', playSounds);
-    location.href = window.location.origin + "/" + roomId;
+    history.push(roomId);
   }
 
   // ready to play
@@ -115,7 +118,7 @@ const Input = () => {
   };
 
   // set the board randomly
-  const randomBoard = () => {
+  const randomBoardClick = () => {
     playSound('click', playSounds);
     setRandomBoard(!randomBoard);
   }
@@ -156,12 +159,11 @@ const Input = () => {
 
   // set the game over message according to the player status (winning / losing)
   useEffect(() => {
-    if (winning === true) {
-      setGameOverMsg('YOU WON!!!');
+    if (winning != null) {
+      setGameOverMsg( winning ? 'YOU WON!!!'  : 'you lose');
     }
-    else if (winning === false) {
-      setGameOverMsg('you lose')
-    }
+    // if (winning === true) { setGameOverMsg("YOU WON!!!") }
+    // else if (winning === false) { setGameOverMsg("you lose") }
   }, [winning]);
 
 
@@ -187,14 +189,14 @@ const Input = () => {
       return (
         <>
           <Button onClick={() => readyButton()}><Flash>Ready</Flash></Button>
-          <Button onClick={randomBoard}>Random</Button>
+          <Button onClick={randomBoardClick}>Random</Button>
         </>
       )
     }
   }
   const newGame = () => {
     playSound('click', playSounds);
-    location.href = window.location.origin
+    location.href = location.origin;
   }
   const playAgainFunc = () => {
     if (!isLeave) {
@@ -237,7 +239,7 @@ const InputWrapper = styled.div`
   width: 125vw;
   justify-content: center;
   background: rgba(0,0,0,0.8);
-  ${({ showReadyBox, bothPlayersConnected }) => showReadyBox && bothPlayersConnected ? 'background: black; right: 0vw; width: 50%;' : ' ' }
+  ${({ showReadyBox, bothPlayersConnected }) => showReadyBox && bothPlayersConnected ? 'background: black; right: 0vw; width: 50%;' : ' '}
   @media only screen and (max-width: 600px)
   {
     width: 100%;
@@ -249,7 +251,7 @@ const InputWrapper = styled.div`
     ${({ bothPlayersConnected }) => bothPlayersConnected ? `width: 80vw; top: 7vw; margin-left: -19vw;` : ' '};
   }
   `;
-  
+
 const MiniWrapper = styled.form`
   display: flex;
   flex-direction: column;

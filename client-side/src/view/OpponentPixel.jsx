@@ -6,7 +6,7 @@ import { playSound } from "../stateManager/stateManager";
 import { FaTruckMonster } from "react-icons/fa";
 
 
-const dev = false // necessary only for dev - let you see the opponent ship
+const dev = true // necessary only for dev - let you see the opponent ship
 
 // checking the pixel status when clicking and render a new one (depends on the pixel status) 
 const OpponentPixel = ({ status, x, y, clickhandler, lock }) => {

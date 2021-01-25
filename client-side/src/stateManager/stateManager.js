@@ -1,5 +1,9 @@
 import React, { createContext, useState, useEffect } from "react";
-import { place_ships, initial_game_board, initial_ships } from "../logic/logic";
+import { placeShips, initialGameBoard, initialShips } from "../logic/logic";
+// update_board_hit = boardHitUpdate
+// inspect_hit = inspectHit
+// update_board_miss = missBoardUpdate
+// initial_game_board = initialGameBoard
 import io from 'socket.io-client';
 import { nanoid } from "nanoid";
 
@@ -54,7 +58,7 @@ const StateManager = ({ children }) => {
   const [playerRoom, setPlayerRoom] = useState(nanoid(4));
   const [bothPlayersConnected, setBothPlayersConnected] = useState(null);
   const [playerBoard, setPlayerBoard] = useState([]);
-  const [otherPlayerBoard, setOtherPlayerBoard] = useState(initial_game_board());
+  const [otherPlayerBoard, setOtherPlayerBoard] = useState(initialGameBoard());
   const [playerShips, setPlayerShips] = useState(null);
   const [otherPlayerShips, setOtherPlayerShips] = useState();
   const [isFirstTurn, setIsFirstTurn] = useState(null);
@@ -91,7 +95,7 @@ const StateManager = ({ children }) => {
 
 
    useEffect(() => {
-    let { board, ships } = place_ships(initial_game_board(), initial_ships());
+    let { board, ships } = placeShips(initialGameBoard(), initialShips());
     setPlayerShips(ships);
     setPlayerBoard(board);
   }, [randomBoard]);

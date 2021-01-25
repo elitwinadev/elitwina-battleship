@@ -6,7 +6,6 @@ import { flex, position } from "../styles/Mixins";
 
 
 const fadeoutAnimation = keyframes`${fadeOut}`;
-
 const FadeoutStatus = () => {
 
   const { noteStatus, mouseX, mouseY, gameOverMsg } = useContext(BsContext);

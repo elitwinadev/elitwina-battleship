@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import styled from 'styled-components'
 import { BsContext } from "../stateManager/stateManager";
-import { update_board_hit, update_board_miss } from "../logic/logic";
+import { hitBoardUpdate, missBoardUpdate } from "../logic/logic";
 import { SINK, SHIP_PART, HIT, MISS } from "../stateManager/stateManager";
 import UserPixel from "./UserPixel";
 import { GridWrapper, PlayerGrid, GridHeaders, LittleWrapper, LettersBar, NumbersBar, BarPixel } from "../styles/GlobalStyles";
@@ -35,7 +35,7 @@ const UserGrid = () => {
   const pixelStatus = (x, y, board, ships) => {
     const pixel = board[x][y];
     if (ships && pixel.value === SHIP_PART) {
-      return ships[pixel.ship_index].is_sunk ? SINK : pixel.is_hit ? HIT : pixel.value;
+      return ships[pixel.shipIndex].isSunk ? SINK : pixel.isHit ? HIT : pixel.value;
     }
     return pixel.value;
   }
@@ -46,11 +46,11 @@ const UserGrid = () => {
       const { result, x, y } = otherPlayerGuess;
       let updated;
       if (result === MISS) {
-        updated = update_board_miss(playerBoard, x, y);
+        updated = missBoardUpdate(playerBoard, x, y);
         setPlayerBoard(updated)
       } else if (result === HIT) {
         setUserPrecents(userPrecents + 1);
-        updated = update_board_hit(x, y, playerBoard[x][y].ship_index, playerBoard, playerShips)
+        updated = hitBoardUpdate(x, y, playerBoard[x][y].shipIndex, playerBoard, playerShips)
         // *** need checking out
         setPlayerBoard(updated.board);
       }

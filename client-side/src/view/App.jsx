@@ -5,22 +5,20 @@ import TopBar from "./TopBar";
 import Input from "./Input";
 import UserGrid from "./UserGrid";
 import OpponentGrid from "./OpponentGrid";
-import Chat from "./Chat"
-import Footer from "./Footer";
 import styled from "styled-components";
 import { flex, position } from "../styles/Mixins";
 import Confetti from 'react-confetti';
 import { BrowserRouter } from 'react-router-dom';
 const App = () => {
-  
+
   const { winning, lockOtherPlayerBoard, bothPlayersConnected, showReadyBox, isGameStarted, gameOverMsg } = useContext(BsContext);
   var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && window['safari'].pushNotification));
-if (isSafari) return (
-  <>
-<h1>Your browser not supported!</h1>
-<h1>We recommend using Google Chrome :) </h1>
-</>
-)
+  if (isSafari) return (
+    <>
+      <h1>Your browser not supported!</h1>
+      <h1>We recommend using Google Chrome :) </h1>
+    </>
+  )
   return (
     <AppWrapper isMyTurn={!lockOtherPlayerBoard} isGameStarted={isGameStarted} gameOverMsg={gameOverMsg}>
       <BrowserRouter>
@@ -32,8 +30,6 @@ if (isSafari) return (
           <UserGrid bothPlayersConnected={bothPlayersConnected} showReadyBox={showReadyBox} />
           <OpponentGrid />
         </GameWrapper>
-        {/* <Chat /> */}
-        {/* <Footer /> */}
 
       </BrowserRouter>
     </AppWrapper>
