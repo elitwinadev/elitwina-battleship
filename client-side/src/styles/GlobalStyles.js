@@ -105,7 +105,7 @@ export const ShipHit = styled(StandardPixel)`
   border: 0.1vw solid lightblue;
   background: rgba(255, 153, 153, 0.5);
   color: red;
-  font-size: 5vw;
+  font-size: 4vw;
   animation: ${props => (props.isAnimated ? css`${flashAnimation} 2s;` : '')} ;
 `;
 

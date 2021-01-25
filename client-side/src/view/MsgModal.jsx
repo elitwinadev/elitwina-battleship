@@ -38,7 +38,8 @@ const ModalWrapper = styled.div`
     z-index: 1000;
     @media only screen and (max-width: 600px) {
       width: 100%;
-      top: -10vw;
+      top: -20vw;
+      right: 6.5vw;
       background: black;
       height: 120%;
             }

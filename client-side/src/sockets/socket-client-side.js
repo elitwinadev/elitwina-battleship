@@ -93,7 +93,9 @@ const Sockets = () => {
 
     useEffect(() => {
         socket.on("data", (data = {}) => {
-            console.log(data)
+            if (data === 'REFRESH') { 
+               location.href = window.location.origin;
+            }
             const { other_player_connected, turn, board, ships, ready_to_start, to_player, guess, message, is_winning, leave, users_count, wanna_play_again } = data;
             if (users_count) setUsersCounter(users_count);
             if (wanna_play_again) setPlayAgainMsg(true);
