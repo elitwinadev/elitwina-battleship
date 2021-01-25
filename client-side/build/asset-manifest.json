@@ -1,0 +1,31 @@
+{
+  "files": {
+    "main.css": "/static/css/main.2c89e2f5.chunk.css",
+    "main.js": "/static/js/main.807e903e.chunk.js",
+    "main.js.map": "/static/js/main.807e903e.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.a3e3be7a.js",
+    "runtime-main.js.map": "/static/js/runtime-main.a3e3be7a.js.map",
+    "static/css/2.0f52be0d.chunk.css": "/static/css/2.0f52be0d.chunk.css",
+    "static/js/2.73d1d0c4.chunk.js": "/static/js/2.73d1d0c4.chunk.js",
+    "static/js/2.73d1d0c4.chunk.js.map": "/static/js/2.73d1d0c4.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/2.0f52be0d.chunk.css.map": "/static/css/2.0f52be0d.chunk.css.map",
+    "static/css/main.2c89e2f5.chunk.css.map": "/static/css/main.2c89e2f5.chunk.css.map",
+    "static/js/2.73d1d0c4.chunk.js.LICENSE.txt": "/static/js/2.73d1d0c4.chunk.js.LICENSE.txt",
+    "static/media/chatMessageSound.01bfd32f.mp3": "/static/media/chatMessageSound.01bfd32f.mp3",
+    "static/media/clickSound.0ff4ea85.wav": "/static/media/clickSound.0ff4ea85.wav",
+    "static/media/errorSound.678c6c3f.wav": "/static/media/errorSound.678c6c3f.wav",
+    "static/media/hitSound.2604a56c.wav": "/static/media/hitSound.2604a56c.wav",
+    "static/media/missSound.62176d6a.wav": "/static/media/missSound.62176d6a.wav",
+    "static/media/notYourTurnSound.d5d8ec22.wav": "/static/media/notYourTurnSound.d5d8ec22.wav",
+    "static/media/sinkSound.c24c2b8c.wav": "/static/media/sinkSound.c24c2b8c.wav",
+    "static/media/yourTurnSound.ecd48317.wav": "/static/media/yourTurnSound.ecd48317.wav"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.a3e3be7a.js",
+    "static/css/2.0f52be0d.chunk.css",
+    "static/js/2.73d1d0c4.chunk.js",
+    "static/css/main.2c89e2f5.chunk.css",
+    "static/js/main.807e903e.chunk.js"
+  ]
+}

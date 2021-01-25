@@ -1,0 +1,12 @@
+.once_animation {
+    animation: blinker 1s linear infinite;
+  }
+  
+  @keyframes blinker {
+    50% {
+      opacity: 0;
+    }
+  }
+  .no_animation {
+      background: white;
+  }
