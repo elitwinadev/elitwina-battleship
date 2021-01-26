@@ -40,7 +40,29 @@ export const StandardPixel = styled.div`
   ${flex()};
   width: 10%;
   height: 10%;
-`;
+  transition: transform .1s;
+  :hover {
+    animation: ${(props) =>
+      props.isMyTurn ? css`
+      background: yellow;
+      background: #00ff41;
+    ` : ' ' }
+  }
+  &:active {
+  
+    ${(props) =>
+      props.isMyTurn
+        ? css`
+    -ms-transform: scale(1.2); /* IE 9 */
+    -webkit-transform: scale(1.2); /* Safari 3-8 */
+    transform: scale(1.2);
+    background: white;
+    opacity: 1;
+    border: none;
+    // border: 2px solid #00ff41;`
+    : ' ' }
+  }
+  `;
 
 // input component:
 
@@ -59,13 +81,13 @@ export const Button = styled.div`
   box-shadow: inset 0 0.1rem 1.5rem lightgrey;
   cursor: pointer;
 
-  &:focus {
-    background: red;
-  }
   &:hover {
     ${cool_shining_green};
     background: #1aff1a;
     color: black;
+  }
+  &:active {
+    opacity: 0.7;
   }
   @media only screen and (max-width: 600px) {
     height: 5.5vw;
@@ -80,10 +102,6 @@ export const RegularSquare = styled(StandardPixel)`
 `;
 
 export const OpponentSquare = styled(RegularSquare)`
-  :hover {
-    background: #00ff41;
-    opacity: 0.5;
-  }
 `;
 
 export const MissHit = styled(StandardPixel)`

@@ -23,14 +23,15 @@ import { FaTruckMonster } from "react-icons/fa";
 const dev = false; // necessary only for dev - let you see the opponent ship
 
 // checking the pixel status when clicking and render a new one (depends on the pixel status)
-const OpponentPixel = ({ status, x, y, clickhandler, lock }) => {
+const OpponentPixel = ({ status, x, y, clickhandler, lock, isMyTurn }) => {
   const [isAnimated, setIsAnimated] = useState(true);
   const { playSounds } = useContext(BsContext);
   const [alreadyPlayed, setAlreadyPlayed] = useState(false);
   if (status === SEA) {
     return (
       <OpponentSquare
-        lock={true}
+      isMyTurn={isMyTurn}
+        lock={lock}
         onClick={() => clickhandler(x, y, lock)}
       ></OpponentSquare>
     );

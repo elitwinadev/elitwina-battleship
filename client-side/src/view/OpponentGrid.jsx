@@ -79,8 +79,8 @@ const OpponentGrid = () => {
       return ships[pixel.shipIndex].isSunk
         ? SINK
         : pixel.isHit
-        ? HIT
-        : pixel.value;
+          ? HIT
+          : pixel.value;
     }
     return pixel.value;
   };

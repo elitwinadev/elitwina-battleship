@@ -70,7 +70,7 @@ const StateManager = ({ children }) => {
   const [randomBoard, setRandomBoard] = useState(false);
   const [isPlayerReady, setIsPlayerReady] = useState(false);
   const [bothPlayersReady, setBothPlayersReady] = useState(false);
-  const [noteStatus, setNoteStatus] = useState();
+  const [noteStatus, setNoteStatus] = useState(null);
   const [gameStatus, setGameStatus] = useState("Welcome");
   const [userPrecents, setUserPrecents] = useState(0);
   const [opponentPrecents, setOpponentPrecents] = useState(0);

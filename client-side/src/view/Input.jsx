@@ -92,9 +92,11 @@ const Input = () => {
 
   // nullify the note after every use
   useEffect(() => {
-    setTimeout(() => {
-      setNoteStatus("");
-    }, 2000);
+    if (noteStatus) {
+      setTimeout(() => {
+        setNoteStatus('');
+      }, 1000);
+    }
   }, [noteStatus]);
 
   // connect the player to the room
@@ -200,7 +202,6 @@ const Input = () => {
                 />
               </FacebookShareButton>
             </Button>
-            &nbsp; &nbsp;
             <Button style={{ width: "4.5vw", height: "4.5vw" }}>
               <FacebookMessengerShareButton
                 url={`${window.location.origin}/${roomId}`}
@@ -212,7 +213,6 @@ const Input = () => {
                 />
               </FacebookMessengerShareButton>
             </Button>
-            &nbsp; &nbsp;
             <Button style={{ width: "4.5vw", height: "4.5vw" }}>
               <WhatsappShareButton url={`${window.location.origin}/${roomId}`}>
                 <WhatsappIcon
@@ -273,20 +273,20 @@ const Input = () => {
                   style={{ margin: "1vw" }}
                 />
               ) : (
-                " "
-              )}
+                  " "
+                )}
             </StaticStatus>
             {renderDecideder()}
           </MiniWrapper>
         ) : (
-          <GameOver>
-            {gameOverMsg}
-            <Button onClick={newGame}>New Game!</Button>
-            <PlayAgainButton error={isLeave} onClick={() => playAgainFunc()}>
-              {playAgainMsg ? <Flash>Play Again!</Flash> : "Play Again!"}
-            </PlayAgainButton>
-          </GameOver>
-        )}
+            <GameOver>
+              {gameOverMsg}
+              <Button onClick={newGame}>New Game!</Button>
+              <PlayAgainButton error={isLeave} onClick={() => playAgainFunc()}>
+                {playAgainMsg ? <Flash>Play Again!</Flash> : "Play Again!"}
+              </PlayAgainButton>
+            </GameOver>
+          )}
       </InputWrapper>
       <Switch>
         <Route path="/:gameId" component={startGame} />
@@ -301,8 +301,8 @@ const InputWrapper = styled.div`
     isGameStarted && !gameOverMsg
       ? "display: none"
       : isConnected
-      ? flex("center", false)
-      : flex()};
+        ? flex("center", false)
+        : flex()};
   position: absolute;
   top: 12vw;
   right: 3vw;
@@ -323,9 +323,9 @@ const InputWrapper = styled.div`
     margin-top: 6vw;
     left: 0;
     ${({ bothPlayersConnected }) =>
-      bothPlayersConnected
-        ? `width: 80vw; top: 7vw; margin-left: -19vw;`
-        : " "};
+    bothPlayersConnected
+      ? `width: 80vw; top: 7vw; margin-left: -19vw;`
+      : " "};
   }
 `;
 
@@ -352,7 +352,7 @@ const MiniWrapper = styled.form`
     height: 50vw;
     margin-left: 4vw;
     ${({ bothPlayersConnected }) =>
-      bothPlayersConnected ? `position: absolute; left: 4vw; top: 8vw;` : " "};
+    bothPlayersConnected ? `position: absolute; left: 4vw; top: 8vw;` : " "};
   }
 `;
 
@@ -446,7 +446,7 @@ const PlayAgainButton = styled(Button)`
     background: ${(props) => (props.error ? "grey" : " ")};
     border: ${(props) => (props.error ? "none" : " ")};
     box-shadow: ${(props) =>
-      props.error ? "inset 0 0.1rem 1.5rem lightgrey" : " "};
+    props.error ? "inset 0 0.1rem 1.5rem lightgrey" : " "};
   }
   @media only screen and (max-width: 600px) {
     height: 5.5vw;

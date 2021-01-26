@@ -13,7 +13,7 @@ const FadeoutStatus = () => {
   } = useContext(BsContext);
   if (gameOverMsg) return "";
   return (
-    <StatusBox mouseX={mouseX + 350} mouseY={mouseY + 100}>
+    <StatusBox mouseX={mouseX + 200} mouseY={mouseY + 150}>
       {" "}
       <Animated>{noteStatus}</Animated>
     </StatusBox>
@@ -39,3 +39,7 @@ const Animated = styled.h1`
   animation: 3s ${fadeoutAnimation};
   font-size: 2rem;
 `;
+
+
+
+
