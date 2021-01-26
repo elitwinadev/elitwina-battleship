@@ -358,7 +358,7 @@ const MiniWrapper = styled.form`
 
 const CopyButton = styled.button`
   font-size: 100%;
-  ${position("relative", false, false, false, "85%")};
+  ${position("relative", false, false, false, "95%")};
 
   &:hover {
     ${cool_shining_green};
@@ -371,7 +371,7 @@ const UrlHolder = styled.div`
   padding: 1vw;
   margin: 1vw;
   height: 4vw;
-  width: 25vw;
+  width: 100%;
   outline: none;
   border-radius: 4rem;
   border: white 1px solid;

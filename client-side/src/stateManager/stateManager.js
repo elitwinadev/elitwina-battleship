@@ -47,6 +47,7 @@ export const playSound = (event, playSounds) => {
         break;
       case "YOURTURN":
         SOUND = yourTurnSound;
+        break;
       case "NOTYOURTURN":
         SOUND = notYourTurnSound;
         break;
