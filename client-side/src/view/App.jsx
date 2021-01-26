@@ -30,10 +30,11 @@ const App = () => {
     return (
       <>
         <Box>
-          <h1>Ooops...</h1>
+          <span>Ooops...</span>
           <br />
-          <h1>Your browser not supported!</h1>
-          <h1>We recommend using Google Chrome :) </h1>
+          <br/>
+          Your browser not supported!
+          We recommend using Google Chrome
         </Box>
       </>
     );
@@ -96,7 +97,7 @@ const Box = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 50vw;
-  width: 50vw;
+  height: 100vw;
+  width: 100vw;
   flex-direction: column;
 `;
