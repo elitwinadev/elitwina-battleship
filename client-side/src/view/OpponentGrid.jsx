@@ -1,11 +1,19 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
 import { BsContext, playSound } from "../stateManager/stateManager";
-import styled, { keyframes } from 'styled-components'
+import styled, { keyframes } from "styled-components";
 import { inspectHit, hitBoardUpdate, missBoardUpdate } from "../logic/logic";
 import { SINK, SHIP_PART, HIT, MISS } from "../stateManager/stateManager";
 import OpponentPixel from "./OpponentPixel";
-import { GridWrapper, OtherPlayerGrid, GridHeaders, LittleWrapper, LettersBar, NumbersBar, BarPixel } from "../styles/GlobalStyles";
-import ProgressBar from '@ramonak/react-progress-bar';
+import {
+  GridWrapper,
+  OtherPlayerGrid,
+  GridHeaders,
+  LittleWrapper,
+  LettersBar,
+  NumbersBar,
+  BarPixel,
+} from "../styles/GlobalStyles";
+import ProgressBar from "@ramonak/react-progress-bar";
 const OpponentGrid = () => {
   const {
     otherPlayerBoard,
@@ -26,13 +34,15 @@ const OpponentGrid = () => {
     isGameStarted,
     isMyTurn,
     setIsMyTurn,
-    playSounds
+    playSounds,
   } = useContext(BsContext);
   const [lockedPixels, setLockedPixels] = useState([]);
   const isItemLocked = (x, y) => {
     if (!lockedPixels) return false;
     for (let item of lockedPixels) {
-      if (item.x === x && item.y === y) { return true };
+      if (item.x === x && item.y === y) {
+        return true;
+      }
     }
     return false;
   };
@@ -42,8 +52,7 @@ const OpponentGrid = () => {
     if (isFirstTurn) {
       setLockOtherPlayerBoard(false);
       setIsMyTurn(true);
-    }
-    else {
+    } else {
       setLockOtherPlayerBoard(true);
       setIsMyTurn(false);
     }
@@ -67,10 +76,14 @@ const OpponentGrid = () => {
   const pixelStatus = (x, y, board, ships) => {
     const pixel = board[x][y];
     if (ships && pixel.value === SHIP_PART) {
-      return ships[pixel.shipIndex].isSunk ? SINK : pixel.isHit ? HIT : pixel.value;
+      return ships[pixel.shipIndex].isSunk
+        ? SINK
+        : pixel.isHit
+        ? HIT
+        : pixel.value;
     }
     return pixel.value;
-  }
+  };
 
   // checking the guess's result and emit it to the other player
   // in the same time updating the player's opponent board and lock it
@@ -93,39 +106,39 @@ const OpponentGrid = () => {
             setLockOtherPlayerBoard(true);
           }, 2000);
           setTimeout(() => {
-            setNoteStatus('MISS');
+            setNoteStatus("MISS");
           }, 100);
         } else if (result === HIT) {
-          updated = hitBoardUpdate(x, y, otherPlayerBoard[x][y].shipIndex, otherPlayerBoard, otherPlayerShips)
+          updated = hitBoardUpdate(
+            x,
+            y,
+            otherPlayerBoard[x][y].shipIndex,
+            otherPlayerBoard,
+            otherPlayerShips
+          );
 
           if (updated.sunk) {
-            setNoteStatus('SINK!')
+            setNoteStatus("SINK!");
             // NOT WORKING!!
-          }
-          else {
-            setNoteStatus('HIT!');
+          } else {
+            setNoteStatus("HIT!");
             setOpponentPrecents(opponentPrecents + 1);
           }
           if (updated.isWin) {
-
             setWinning(true);
             setTimeout(() => {
               setLockOtherPlayerBoard(true);
             }, 2000);
-
-          };
-
+          }
         }
         lockPixel(x, y);
-      }
-      else {
-        playSound('ERROR', playSounds)
-        setNoteStatus('Already clicked!')
+      } else {
+        playSound("ERROR", playSounds);
+        setNoteStatus("Already clicked!");
       }
     }
     event.stopPropagation();
-  }
-
+  };
 
   // lock a specific pixel
   const lockPixel = (x, y) => {
@@ -135,15 +148,32 @@ const OpponentGrid = () => {
 
   // save all the locked pixels in an array for later checking
 
-
   return (
-    <OpponentGridWrapper isMyTurn={!lockOtherPlayerBoard} isGameStarted={isGameStarted}>
+    <OpponentGridWrapper
+      isMyTurn={!lockOtherPlayerBoard}
+      isGameStarted={isGameStarted}
+    >
       <GridHeaders>Opponents Board</GridHeaders>
       <LittleWrapper>
-        <ProgressBar bgcolor="#00FF41" labelColor="grey" completed={opponentPrecents * 5 || 0} width={'30vw'} height={'2vw'} labelSize={'2vw'} />
+        <ProgressBar
+          bgcolor="#00FF41"
+          labelColor="grey"
+          completed={opponentPrecents * 5 || 0}
+          width={"30vw"}
+          height={"2vw"}
+          labelSize={"2vw"}
+        />
       </LittleWrapper>
-      <NumbersBar>{[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num, i) => <BarPixel key={i}>{num}</BarPixel>)}</NumbersBar>
-      <LettersBar>{['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'].map((letter, i) => <BarPixel key={i}>{letter}</BarPixel>)}</LettersBar>
+      <NumbersBar>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num, i) => (
+          <BarPixel key={i}>{num}</BarPixel>
+        ))}
+      </NumbersBar>
+      <LettersBar>
+        {["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"].map((letter, i) => (
+          <BarPixel key={i}>{letter}</BarPixel>
+        ))}
+      </LettersBar>
       <OtherPlayerGrid lockOtherPlayerBoard={lockOtherPlayerBoard}>
         {otherPlayerBoard.map((xArr, Xindex, board) =>
           xArr.map((yArr, Yindex) => (
@@ -154,8 +184,8 @@ const OpponentGrid = () => {
               status={pixelStatus(Xindex, Yindex, board, otherPlayerShips)}
               x={Xindex}
               y={Yindex}
-              clickhandler={onClick}>
-            </OpponentPixel>
+              clickhandler={onClick}
+            ></OpponentPixel>
           ))
         )}
       </OtherPlayerGrid>
@@ -165,12 +195,8 @@ const OpponentGrid = () => {
 
 export default OpponentGrid;
 
-
-
 const OpponentGridWrapper = styled(GridWrapper)`
-@media only screen and (max-width: 600px) {
-  {
-    ${props => props.isMyTurn ? `display: grid` : `display: none`};
-    
+  @media only screen and (max-width: 600px) {
+    ${(props) => (props.isMyTurn ? `display: grid` : `display: none`)};
   }
-  `
+`;

@@ -1,60 +1,64 @@
 import React, { createContext, useState, useEffect } from "react";
 import { placeShips, initialGameBoard, initialShips } from "../logic/logic";
-// update_board_hit = boardHitUpdate
-// inspect_hit = inspectHit
-// update_board_miss = missBoardUpdate
-// initial_game_board = initialGameBoard
-import io from 'socket.io-client';
+import io from "socket.io-client";
 import { nanoid } from "nanoid";
 
-import sinkSound from '../sounds/sinkSound.wav';
-import missSound from '../sounds/missSound.wav';
-import hitSound from '../sounds/hitSound.wav';
-import errorSound from '../sounds/errorSound.wav';
-import clickSound from '../sounds/clickSound.wav';
-import yourTurnSound from '../sounds/yourTurnSound.wav';
-import notYourTurnSound from '../sounds/notYourTurnSound.wav';
-import chatMessageSound from '../sounds/chatMessageSound.mp3';
-
+import sinkSound from "../assests/sounds/sinkSound.wav";
+import missSound from "../assests/sounds/missSound.wav";
+import hitSound from "../assests/sounds/hitSound.wav";
+import errorSound from "../assests/sounds/errorSound.wav";
+import clickSound from "../assests/sounds/clickSound.wav";
+import yourTurnSound from "../assests/sounds/yourTurnSound.wav";
+import notYourTurnSound from "../assests/sounds/notYourTurnSound.wav";
 
 const { REACT_APP_SERVER_URL } = process.env;
 export const socket = io(REACT_APP_SERVER_URL);
-const BsContext = createContext(socket);  
+const BsContext = createContext(socket);
 const { Provider } = BsContext;
 
-
-export const HORIZONTAL = 'horizontal'
-export const VERTICAL = 'vertical';
-export const RUSSIAN = 'RUSSIAN';
-export const FRENCH = 'FRENCH';
-export const MISS = 'MISS';
-export const HIT = 'HIT';
-export const SEA = 'SEA';
-export const SINK = 'SINK';
-export const SHIP_PART = 'SHIP_PART';
-export const AROUND_SHIP = 'AROUND_SHIP';
-export const AROUND_SINK = 'AROUND_SINK';
+export const HORIZONTAL = "horizontal";
+export const VERTICAL = "vertical";
+export const RUSSIAN = "RUSSIAN";
+export const FRENCH = "FRENCH";
+export const MISS = "MISS";
+export const HIT = "HIT";
+export const SEA = "SEA";
+export const SINK = "SINK";
+export const SHIP_PART = "SHIP_PART";
+export const AROUND_SHIP = "AROUND_SHIP";
+export const AROUND_SINK = "AROUND_SINK";
 
 var audio;
 export const playSound = (event, playSounds) => {
   if (playSounds) {
     let SOUND;
-    if (event === 'SINK') { SOUND = sinkSound }
-    else if (event === 'MISS') { SOUND = missSound }
-    else if (event === 'HIT') { SOUND = hitSound }
-    else if (event === 'ERROR') { SOUND = errorSound }
-    else if (event === 'YOURTURN') { SOUND = yourTurnSound }
-    else if (event === 'NOTYOURTURN') { SOUND = notYourTurnSound }
-    else if (event === 'CHATMESSAGE') { SOUND = chatMessageSound }
-    else { SOUND = clickSound }
+    switch (event) {
+      case "SINK":
+        SOUND = sinkSound;
+        break;
+      case "MISS":
+        SOUND = missSound;
+        break;
+      case "HIT":
+        SOUND = hitSound;
+        break;
+      case "ERROR":
+        SOUND = errorSound;
+        break;
+      case "YOURTURN":
+        SOUND = yourTurnSound;
+      case "NOTYOURTURN":
+        SOUND = notYourTurnSound;
+        break;
+      default:
+        SOUND = clickSound;
+    }
     audio = new Audio(SOUND);
     audio.play();
   }
-}
-
+};
 
 const StateManager = ({ children }) => {
-
   const [playerRoom, setPlayerRoom] = useState(nanoid(4));
   const [bothPlayersConnected, setBothPlayersConnected] = useState(null);
   const [playerBoard, setPlayerBoard] = useState([]);
@@ -66,7 +70,7 @@ const StateManager = ({ children }) => {
   const [isPlayerReady, setIsPlayerReady] = useState(false);
   const [bothPlayersReady, setBothPlayersReady] = useState(false);
   const [noteStatus, setNoteStatus] = useState();
-  const [gameStatus, setGameStatus] = useState('Welcome');
+  const [gameStatus, setGameStatus] = useState("Welcome");
   const [userPrecents, setUserPrecents] = useState(0);
   const [opponentPrecents, setOpponentPrecents] = useState(0);
   const [playerGuess, setPlayerGuess] = useState(null);
@@ -93,8 +97,7 @@ const StateManager = ({ children }) => {
   const [isMyTurn, setIsMyTurn] = useState(false);
   const [playSounds, setPlaySounds] = useState(true);
 
-
-   useEffect(() => {
+  useEffect(() => {
     let { board, ships } = placeShips(initialGameBoard(), initialShips());
     setPlayerShips(ships);
     setPlayerBoard(board);
@@ -137,9 +140,8 @@ const StateManager = ({ children }) => {
     mouseY,
     isMyTurn,
     playSounds,
-    playAgainMsg
+    playAgainMsg,
   };
-
 
   const action = {
     setPlayerRoom,
@@ -178,40 +180,18 @@ const StateManager = ({ children }) => {
     setMouseY,
     setIsMyTurn,
     setPlaySounds,
-    setPlayAgainMsg
+    setPlayAgainMsg,
   };
 
   const ws_connection = {
-    socket
+    socket,
   };
 
-  return <Provider value={{ ...state, ...action, ...ws_connection }}>{children}</Provider>;
+  return (
+    <Provider value={{ ...state, ...action, ...ws_connection }}>
+      {children}
+    </Provider>
+  );
 };
 
-
 export { BsContext, StateManager };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

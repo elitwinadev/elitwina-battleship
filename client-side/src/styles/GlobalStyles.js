@@ -1,6 +1,6 @@
 import { createGlobalStyle } from "styled-components";
 import styled, { keyframes, css } from "styled-components";
-import { flash } from 'react-animations';
+import { flash } from "react-animations";
 import { flex, cool_shining_green } from "../styles/Mixins";
 const flashAnimation = keyframes`${flash}`;
 const GlobalStyles = createGlobalStyle`
@@ -32,7 +32,7 @@ const GlobalStyles = createGlobalStyle`
     }
 `;
 
-export default GlobalStyles
+export default GlobalStyles;
 
 // general:
 
@@ -49,54 +49,57 @@ export const Button = styled.div`
   width: 15vw;
   padding: 0.5vw;
   height: 4.5vw;
-  border: 1px solid #00FF41;
+  border: 1px solid #00ff41;
   border-radius: 3rem;
   color: white;
-  background: #003B00;
+  background: #003b00;
   font-size: 2.5vw;
   font-weight: 400;
   margin: 2%;
   box-shadow: inset 0 0.1rem 1.5rem lightgrey;
   cursor: pointer;
 
-    &:focus {
-      background: red;
-    }
-    &:hover {
-      ${cool_shining_green};
-      background: #1aff1a;
-      color: black;
-    }
-    @media only screen and (max-width: 600px)
-    {
-height: 5.5vw;
-width: 20vw;
-    }
+  &:focus {
+    background: red;
+  }
+  &:hover {
+    ${cool_shining_green};
+    background: #1aff1a;
+    color: black;
+  }
+  @media only screen and (max-width: 600px) {
+    height: 5.5vw;
+    width: 20vw;
+  }
 `;
 
 // UserPixel + OpponentPixel components:
 
 export const RegularSquare = styled(StandardPixel)`
-  border: 0.1vw solid #00FF41;
+  border: 0.1vw solid #00ff41;
 `;
 
 export const OpponentSquare = styled(RegularSquare)`
-
-    :hover {
-      background: #00ff41;
-      opacity: 0.5;
-    }
+  :hover {
+    background: #00ff41;
+    opacity: 0.5;
+  }
 `;
 
 export const MissHit = styled(StandardPixel)`
-  border: 0.1vw solid #00FF41;
-  background: #00FF41;
+  border: 0.1vw solid #00ff41;
+  background: #00ff41;
   opacity: 0.3;
-  animation: ${props => (props.isAnimated ? css`${flashAnimation} 2s;` : '')} ;
+  animation: ${(props) =>
+    props.isAnimated
+      ? css`
+          ${flashAnimation} 2s;
+        `
+      : ""};
 `;
 
 export const AroundSink = styled(StandardPixel)`
-  border: 0.1vw solid #00FF41;
+  border: 0.1vw solid #00ff41;
   background: red;
   opacity: 0.3;
 `;
@@ -106,26 +109,33 @@ export const ShipHit = styled(StandardPixel)`
   background: rgba(255, 153, 153, 0.5);
   color: red;
   font-size: 4vw;
-  animation: ${props => (props.isAnimated ? css`${flashAnimation} 2s;` : '')} ;
+  animation: ${(props) =>
+    props.isAnimated
+      ? css`
+          ${flashAnimation} 2s;
+        `
+      : ""};
 `;
 
 export const ShipSink = styled(StandardPixel)`
-background: #008F11;
-border: 0.1vw solid #00FF41;
-animation: ${props => (props.isAnimated ? css`${flashAnimation} 2s;` : '')} ;
-  
+  background: #008f11;
+  border: 0.1vw solid #00ff41;
+  animation: ${(props) =>
+    props.isAnimated
+      ? css`
+          ${flashAnimation} 2s;
+        `
+      : ""};
 `;
 
 export const ShipPart = styled(StandardPixel)`
   border: 0.1vw solid blue;
   background: rgba(0, 0, 255, 0.6);
-
 `;
 
 // UserGrid + OpponentGrid components:
 
 export const GridWrapper = styled.div`
-
   border: none;
   height: 100%;
   width: 100%;
@@ -133,38 +143,36 @@ export const GridWrapper = styled.div`
   display: grid;
   justify-content: center;
   grid-template-areas:
-  'header header'
-  'progressBar progressBar'
-  'emptyPixel lettersBar'
-  'numbersBar grid';
+    "header header"
+    "progressBar progressBar"
+    "emptyPixel lettersBar"
+    "numbersBar grid";
   @media only screen and (max-width: 600px) {
-      padding-top: 5vw;
-      zoom: 125%;
-    }
-
-    
+    padding-top: 5vw;
+    zoom: 125%;
+  }
 `;
 
 export const PlayerGrid = styled.div`
-
   display: flex;
   flex-wrap: wrap;
   height: 40vw;
   width: 40vw;
-  color: #003B00;
+  color: #003b00;
   grid-area: grid;
-  @media only screen and (max-width: 600px)
-    {
-      height: 50vw;
-      width: 50vw;
-      
-    }
-    opacity: ${({ lockOtherPlayerBoard }) => (lockOtherPlayerBoard ? '0.3' : '1')};
+  @media only screen and (max-width: 600px) {
+    height: 50vw;
+    width: 50vw;
+  }
+  opacity: ${({ lockOtherPlayerBoard }) =>
+    lockOtherPlayerBoard ? "0.3" : "1"};
 `;
 
 export const OtherPlayerGrid = styled(PlayerGrid)`
-  cursor: ${({ lockOtherPlayerBoard }) => (lockOtherPlayerBoard ? 'not-allowed' : 'pointer')};
-  opacity: ${({ lockOtherPlayerBoard }) => (lockOtherPlayerBoard ? '0.3' : '1')};
+  cursor: ${({ lockOtherPlayerBoard }) =>
+    lockOtherPlayerBoard ? "not-allowed" : "pointer"};
+  opacity: ${({ lockOtherPlayerBoard }) =>
+    lockOtherPlayerBoard ? "0.3" : "1"};
 `;
 
 export const GridHeaders = styled.span`
@@ -184,21 +192,19 @@ export const LittleWrapper = styled.div`
 `;
 
 export const LettersBar = styled.div`
-  ${flex(false,false)};
+  ${flex(false, false)};
   width: 40vw;
   margin-bottom: -1vw;
 
   grid-area: lettersBar;
   font-size: 3vw;
   @media only screen and (max-width: 600px) {
-    {
-width: 50vw;
-
-    }
+    width: 50vw;
+  }
 `;
 
 export const NumbersBar = styled.div`
-  ${flex('center', false)};
+  ${flex("center", false)};
   flex-direction: column;
   height: 40vw;
   font-size: 3vw;
@@ -206,19 +212,12 @@ export const NumbersBar = styled.div`
 
   grid-area: numbersBar;
   @media only screen and (max-width: 600px) {
-    {
-height: 50vw;
-    }
+    height: 50vw;
+  }
 `;
 
-export const BarPixel = styled(StandardPixel)`
-`;
+export const BarPixel = styled(StandardPixel)``;
 
 export const PlaceFiller = styled(StandardPixel)`
   grid-area: emptyPixel;
 `;
-
-
-
-
-
