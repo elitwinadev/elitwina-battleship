@@ -61,7 +61,7 @@ const App = () => {
             showReadyBox={showReadyBox}
           />
           <OpponentGrid />
-          {/* <Chat /> */}
+          <Chat />
         </GameWrapper>
       </BrowserRouter>
     </AppWrapper>

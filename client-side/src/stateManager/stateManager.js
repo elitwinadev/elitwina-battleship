@@ -105,6 +105,7 @@ const StateManager = ({ children }) => {
   const [mouseY, setMouseY] = useState(0);
   const [isMyTurn, setIsMyTurn] = useState(false);
   const [playSounds, setPlaySounds] = useState(true);
+  const [chatContent, setChatContent] = useState([]);
 
   useEffect(() => {
     let { board, ships } = placeShips(initialGameBoard(), initialShips());
@@ -150,6 +151,7 @@ const StateManager = ({ children }) => {
     isMyTurn,
     playSounds,
     playAgainMsg,
+    chatContent
   };
 
   const action = {
@@ -190,6 +192,7 @@ const StateManager = ({ children }) => {
     setIsMyTurn,
     setPlaySounds,
     setPlayAgainMsg,
+    setChatContent
   };
 
   const ws_connection = {

@@ -8,7 +8,7 @@ import { IoCloseOutline } from "react-icons/io5";
 import { BiSend } from "react-icons/bi";
 
 const Chat = () => {
-    const { setShowModal } = useContext(BsContext);
+    const { setShowModal, chatContent } = useContext(BsContext);
     const [isShow, setIsShow] = useState(false);
     return (
         <>
@@ -17,11 +17,11 @@ const Chat = () => {
             </ChatButton>
             {isShow ? <ChatBox>
                 <ChatMessages>
-                    <Message user="me">hey1</Message>
-                    <Message user="him">hey2</Message>
-                    <Message user="me">hey3</Message>
+                    {chatContent.map(message =>
+                        <Message user="me">{message}</Message>
+                    )};
                     <Input placeholder="Enter your message..." />
-                    <Send/>
+                    <Send />
                 </ChatMessages>
 
             </ChatBox> : ' '}
