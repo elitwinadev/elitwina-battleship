@@ -107,6 +107,7 @@ export const MissHit = styled(StandardPixel)`
   border: 0.1vw solid #00ff41;
   background: #00ff41;
   opacity: 0.3;
+  font-size: 5vw;
   animation: ${(props) =>
     props.isAnimated
       ? css`
