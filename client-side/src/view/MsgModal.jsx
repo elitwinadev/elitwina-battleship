@@ -20,7 +20,7 @@ const Modal = () => {
     <ModalWrapper>
       <Dialog>
         <span style={{ fontSize: "3.5vw" }}>
-          Your opponent just leaved the game.
+          Your opponent left the game.
         </span>
         <br />
         <Button ref={okRef} onClick={() => okButton()}>
@@ -43,7 +43,7 @@ const ModalWrapper = styled.div`
   @media only screen and (max-width: 600px) {
     width: 100%;
     top: -20vw;
-    right: 6.5vw;
+    right: 0vw;
     background: black;
     height: 120%;
   }

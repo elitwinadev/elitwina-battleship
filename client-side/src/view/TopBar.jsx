@@ -8,6 +8,7 @@ import { flash } from "react-animations";
 import Loader from "react-loader-spinner";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { HiVolumeOff, HiVolumeUp } from "react-icons/hi";
+import Button from "../styles/GlobalStyles"
 
 const flashAnimation = keyframes`${flash}`;
 
@@ -21,6 +22,7 @@ const TopBar = () => {
     isMyTurn,
     playSounds,
     setPlaySounds,
+    bothPlayersConnected
   } = useContext(BsContext);
   useEffect(() => {
     if (isGameStarted) {
@@ -38,13 +40,11 @@ const TopBar = () => {
   }, [isMyTurn]);
   return (
     <TopBarWrapper>
-      {isGameStarted ? (
+      <>
         <SoundsToggle onClick={() => setPlaySounds(!playSounds)}>
           {playSounds ? <HiVolumeUp /> : <HiVolumeOff />}
         </SoundsToggle>
-      ) : (
-        " "
-      )}
+      </>
       <LogoWrapper>
         <Logo
           src={logo}
@@ -62,25 +62,25 @@ const TopBar = () => {
               <Flash>Its Your Turn!</Flash>
             </TurnText>
           ) : (
-            <TurnText>
-              Opponent Turn
-              <Loader
-                style={{
-                  paddingLeft: "0.5vw",
-                  position: "relative",
-                  top: "1.1vw",
-                }}
-                type="ThreeDots"
-                color="white"
-                height={"4vw"}
-                width={"4vw"}
-              />{" "}
-            </TurnText>
-          )}
+              <TurnText>
+                Opponent Turn
+                <Loader
+                  style={{
+                    paddingLeft: "0.5vw",
+                    position: "relative",
+                    top: "1.1vw",
+                  }}
+                  type="ThreeDots"
+                  color="white"
+                  height={"4vw"}
+                  width={"4vw"}
+                />{" "}
+              </TurnText>
+            )}
         </TurnHolder>
       ) : (
-        " "
-      )}
+          " "
+        )}
       {showModal && !gameOverMsg ? <Modal /> : " "}
     </TopBarWrapper>
   );
@@ -144,13 +144,22 @@ const Flash = styled.h1`
 `;
 
 const SoundsToggle = styled.h1`
-  position: absolute;
-  top: 4vw;
-  right: 4vw;
-  z-index: 3000;
-  cursor: pointer;
-  @media only screen and (max-width: 600px) {
-    font-size: 4vw;
-    right: 4vw;
-  }
+display: flex;
+justify-content: space-between;
+position: fixed;
+top: 4vw;
+right: 4vw;
+flex-direction: row-reverse;
+cursor: pointer;
+font-size: 4vw;
+margin - top: 1vw;
+@media only screen and(max - width: 600px) {
+  font - size: 4vw;
+}
+  &: hover {
+  color: #1aff1a;
+}
+  &: active {
+  opacity: 0.7;
+}
 `;

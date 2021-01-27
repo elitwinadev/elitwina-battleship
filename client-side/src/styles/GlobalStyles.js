@@ -11,6 +11,7 @@ const GlobalStyles = createGlobalStyle`
     -ms-user-select: none;
     user-select: none;
     zoom: 120%;
+    -moz-transform: scale(0.8);
     @media only screen and (min-width: 600px) {
       {zoom: 85%}
     }
@@ -42,26 +43,24 @@ export const StandardPixel = styled.div`
   height: 10%;
   transition: transform .1s;
   :hover {
-    animation: ${(props) =>
-      props.isMyTurn ? css`
-      background: yellow;
+${(props) =>
+    props.isMyTurn ? css`
       background: #00ff41;
-    ` : ' ' }
+    ` : ' '}
   }
   &:active {
   
     ${(props) =>
-      props.isMyTurn
-        ? css`
+    props.isMyTurn
+      ? css`
     -ms-transform: scale(1.2); /* IE 9 */
     -webkit-transform: scale(1.2); /* Safari 3-8 */
     transform: scale(1.2);
     background: white;
     opacity: 1;
-    border: none;
-    // border: 2px solid #00ff41;`
-    : ' ' }
-  }
+    border: none;`
+      : ' '}
+    }
   `;
 
 // input component:
@@ -120,13 +119,13 @@ export const AroundSink = styled(StandardPixel)`
   border: 0.1vw solid #00ff41;
   background: red;
   opacity: 0.3;
+  font-size: 5vw;
 `;
 
 export const ShipHit = styled(StandardPixel)`
-  border: 0.1vw solid lightblue;
   background: rgba(255, 153, 153, 0.5);
   color: red;
-  font-size: 4vw;
+  font-size: 5vw;
   animation: ${(props) =>
     props.isAnimated
       ? css`
@@ -149,6 +148,8 @@ export const ShipSink = styled(StandardPixel)`
 export const ShipPart = styled(StandardPixel)`
   border: 0.1vw solid blue;
   background: rgba(0, 0, 255, 0.6);
+  box-sizing: border-box;
+  padding: 0.2vw;
 `;
 
 // UserGrid + OpponentGrid components:
@@ -217,7 +218,8 @@ export const LettersBar = styled.div`
   grid-area: lettersBar;
   font-size: 3vw;
   @media only screen and (max-width: 600px) {
-    width: 50vw;
+    // width: 50vw;
+    display: none;
   }
 `;
 
@@ -230,7 +232,8 @@ export const NumbersBar = styled.div`
 
   grid-area: numbersBar;
   @media only screen and (max-width: 600px) {
-    height: 50vw;
+    // height: 50vw;
+    display: none;
   }
 `;
 

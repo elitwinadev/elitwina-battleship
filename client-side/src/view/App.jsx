@@ -9,6 +9,8 @@ import { flex, position } from "../styles/Mixins";
 import Confetti from "react-confetti";
 import { BrowserRouter } from "react-router-dom";
 import styled from "styled-components";
+import Chat from "./Chat";
+var isFirefox = typeof InstallTrigger !== 'undefined';
 const App = () => {
   const {
     winning,
@@ -59,6 +61,7 @@ const App = () => {
             showReadyBox={showReadyBox}
           />
           <OpponentGrid />
+          {/* <Chat /> */}
         </GameWrapper>
       </BrowserRouter>
     </AppWrapper>

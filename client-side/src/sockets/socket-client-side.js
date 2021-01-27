@@ -31,14 +31,13 @@ const Sockets = () => {
 
   const randomize = (min, max) => Math.round(min + Math.random() * (max - min));
 
-  const chat_message = "chat_message";
-  const play = "play";
-  const ready = "ready";
+  const PLAY = "PLAY";
+  const READY = "READY";
   // ----------------------------------------emiting---------------------------------------
 
   // joining a room (clicking "start" button)
   useEffect(() => {
-    socket.emit("data", { room: playerRoom, action: play });
+      socket.emit("data", { room: playerRoom, action: PLAY });
   }, [playerRoom]);
 
   // ready to play (clicking "ready" button)
@@ -46,32 +45,27 @@ const Sockets = () => {
     if (isFirstTurn !== null) {
       socket.emit("data", {
         room: playerRoom,
-        action: ready,
+        action: READY,
         board: playerBoard,
         ships: playerShips,
         turn: !isFirstTurn,
-        to_player: "1",
+        toPlayer: "1",
       });
-      console.log("this is player 2");
-      console.log("player 2 emiting...");
     } else {
-      let local_turn;
-      const turn_generator = randomize(0, 1);
-      turn_generator === 0 ? (local_turn = true) : (local_turn = false);
+      let localTurn;
+      const turnGenerator = randomize(0, 1);
+      turnGenerator === 0 ? (localTurn = true) : (localTurn = false);
       socket.emit("data", {
         room: playerRoom,
-        action: ready,
+        action: READY,
         board: playerBoard,
         ships: playerShips,
-        turn: !local_turn,
-        to_player: "2",
+        turn: !localTurn,
+        toPlayer: "2",
       });
       if (playerRoom) {
-        setIsFirstTurn(local_turn);
+        setIsFirstTurn(localTurn);
       }
-      console.log("this is player 1");
-      console.log("player 1 turn is " + local_turn);
-      console.log("player 1 emiting...");
     }
   }, [isPlayerReady]);
 
@@ -80,19 +74,10 @@ const Sockets = () => {
     socket.emit("data", { room: playerRoom, guess: playerGuess });
   }, [playerGuess]);
 
-  // send a message (using the chat)
-  useEffect(() => {
-    socket.emit("data", {
-      room: playerRoom,
-      action: chat_message,
-      message: chatMessages[chatMessages.length - 1],
-    });
-  }, [playerMessage]);
-
   // winning
   useEffect(() => {
     if (winning === true) {
-      socket.emit("data", { room: playerRoom, is_winning: true });
+      socket.emit("data", { room: playerRoom, isWinning: true });
     }
   }, [winning]);
 
@@ -100,44 +85,40 @@ const Sockets = () => {
 
   useEffect(() => {
     socket.on("data", (data = {}) => {
-      if (data === "REFRESH") {
-        location.href = window.location.origin;
-      }
+      console.log("@@@", data)
       const {
-        other_player_connected,
+        otherPlayerConnected,
         turn,
         board,
         ships,
-        ready_to_start,
-        to_player,
+        readyToStart,
+        toPlayer,
         guess,
         message,
-        is_winning,
-        leave,
-        users_count,
-        wanna_play_again,
+        isWinning,
+        isLeave,
+        usersCount,
+        playAgainRequest,
       } = data;
-      if (users_count) setUsersCounter(users_count);
-      if (wanna_play_again) setPlayAgainMsg(true);
-      if (other_player_connected) {
+      if (data === "REFRESH") {
+        location.href = window.location.origin;
+      }
+      if (usersCount) setUsersCounter(usersCount);
+      if (playAgainRequest) setPlayAgainMsg(true);
+      if (otherPlayerConnected) {
         setBothPlayersConnected(true);
-      } else if (to_player === "2") {
+      } else if (toPlayer === "2") {
         setOtherPlayerBoard(board);
         setOtherPlayerShips(ships);
         setIsFirstTurn(turn);
-        console.log("does player2 starts?: " + turn);
-        console.log("TOPLAYER2: ", data);
-      } else if (to_player === "1") {
+      } else if (toPlayer === "1") {
         setOtherPlayerReady(true);
         setOtherPlayerBoard(board);
         setOtherPlayerShips(ships);
         setIsFirstTurn(turn);
-        console.log("player's 2 data recived by player 1");
-        console.log("does player1 starts?: " + turn);
       } else if (guess) {
         setOtherPlayerGuess(guess);
       } else if (message) {
-        console.log("I got message!");
         setOtherPlayerMessage((prev) => [...prev, message.msg]);
         setChatMessages((prev) => [
           ...prev,
@@ -146,9 +127,9 @@ const Sockets = () => {
             msg: message.msg,
           },
         ]);
-      } else if (is_winning) {
-        setWinning(!is_winning);
-      } else if (leave) {
+      } else if (isWinning) {
+        setWinning(!isWinning);
+      } else if (isLeave) {
         setIsLeave(true);
         setShowModal(true);
       }
@@ -157,7 +138,7 @@ const Sockets = () => {
   //--------------- Play again ------------------------
   useEffect(() => {
     if (playAgain) {
-      socket.emit("data", { play_again_emit: true, room: playerRoom });
+      socket.emit("data", { playAgainEmit: true, room: playerRoom });
       setPlayAgain(false);
     }
   }, [playAgain]);

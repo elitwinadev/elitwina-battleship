@@ -89,6 +89,7 @@ const OpponentGrid = () => {
   // in the same time updating the player's opponent board and lock it
   // afterwards lock the used pixel
   const onClick = (x, y) => {
+    console.log("CLICKED!!!!")
     setMouseX(event.screenX);
     setMouseY(event.screenY);
     let updated;

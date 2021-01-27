@@ -3,13 +3,15 @@ import { placeShips, initialGameBoard, initialShips } from "../logic/logic";
 import io from "socket.io-client";
 import { nanoid } from "nanoid";
 
-import sinkSound from "../assests/sounds/sinkSound.wav";
+import sinkSound from "../assests/sounds/sinkSound.mp3";
 import missSound from "../assests/sounds/missSound.wav";
 import hitSound from "../assests/sounds/hitSound.wav";
 import errorSound from "../assests/sounds/errorSound.wav";
 import clickSound from "../assests/sounds/clickSound.wav";
 import yourTurnSound from "../assests/sounds/yourTurnSound.wav";
 import notYourTurnSound from "../assests/sounds/notYourTurnSound.wav";
+import youWonSound from "../assests/sounds/youWonSound.wav";
+import youLoseSound from "../assests/sounds/youLoseSound.wav";
 
 const { REACT_APP_SERVER_URL } = process.env;
 export const socket = io(REACT_APP_SERVER_URL);
@@ -50,6 +52,12 @@ export const playSound = (event, playSounds) => {
         break;
       case "NOTYOURTURN":
         SOUND = notYourTurnSound;
+        break;
+      case "YOUWON":
+        SOUND = youWonSound;
+        break;
+      case "YOULOSE":
+        SOUND = youLoseSound;
         break;
       default:
         SOUND = clickSound;

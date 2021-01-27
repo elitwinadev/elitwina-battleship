@@ -174,10 +174,15 @@ const Input = () => {
   // set the game over message according to the player status (winning / losing)
   useEffect(() => {
     if (winning != null) {
-      setGameOverMsg(winning ? "YOU WON!!!" : "you lose");
+      if (winning === true) {
+        setGameOverMsg("YOU WON!!!");
+        playSound('YOUWON', playSounds);
+      }
+      else {
+        setGameOverMsg("you lose");
+        playSound('YOULOSE', playSounds);
+      }
     }
-    // if (winning === true) { setGameOverMsg("YOU WON!!!") }
-    // else if (winning === false) { setGameOverMsg("you lose") }
   }, [winning]);
 
   // render the suitable buttons and inputs according to the player choices

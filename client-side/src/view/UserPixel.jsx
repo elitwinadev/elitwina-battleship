@@ -66,7 +66,7 @@ const UserPixel = ({ status, lock }) => {
     }
     return <AroundSink isAnimated={isAnimated}>•</AroundSink>;
   } else if (status === SHIP_PART) {
-    return <ShipPart is_lock={lock}></ShipPart>;
+    return <ShipPart isLock={lock}></ShipPart>;
   }
 };
 
