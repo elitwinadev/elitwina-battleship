@@ -85,7 +85,6 @@ const Sockets = () => {
 
   useEffect(() => {
     socket.on("data", (data = {}) => {
-      console.log("@@@", data)
       const {
         otherPlayerConnected,
         turn,

@@ -83,7 +83,7 @@ const OpponentPixel = ({ status, x, y, clickhandler, lock, isMyTurn }) => {
       }, 3000);
     }
     return (
-      <AroundSink isAnimated={isAnimated} lock={lock} onClick={() => alert("around!")}>
+      <AroundSink isAnimated={isAnimated} lock={lock}>
         •
       </AroundSink>
     );
