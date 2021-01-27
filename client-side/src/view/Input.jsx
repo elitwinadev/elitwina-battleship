@@ -266,7 +266,7 @@ const Input = () => {
         showReadyBox={showReadyBox}
       >
         {!gameOverMsg ? (
-          <MiniWrapper bothPlayersConnected={bothPlayersConnected}>
+          <MiniWrapper bothPlayersConnected={bothPlayersConnected} bothPlayersReady={bothPlayersReady}>
             <StaticStatus>
               {gameStatus}
               {waiting ? (
@@ -324,7 +324,7 @@ const InputWrapper = styled.div`
     width: 100%;
     background: rgba(0, 0, 0, 0.8);
     opacity: 1;
-    height: 90%;
+    height: 40%;
     margin-top: 6vw;
     left: 0;
     ${({ bothPlayersConnected }) =>
@@ -355,10 +355,12 @@ const MiniWrapper = styled.form`
   @media only screen and (max-width: 600px) {
     width: 50vw;
     height: 50vw;
-    margin-left: 4vw;
-    ${({ bothPlayersConnected }) =>
-    bothPlayersConnected ? `position: absolute; left: 4vw; top: 8vw;` : " "};
+    margin-left: 23vw;
+    margin-top: 16vw;
+    width: 50vw;
+    margin-left: ${(props) => (!props.bothPlayersConnected ? "0vw" : ' ')};
   }
+
 `;
 
 const CopyButton = styled.button`
@@ -429,8 +431,8 @@ const GameOver = styled.div`
     justify-content: center;
     width: 68vw;
     left: 18vw;
-    height: 120%;
-    top: -15vw;
+    height: 90vw;
+    top: 0vw;
     background: black;
   }
 `;

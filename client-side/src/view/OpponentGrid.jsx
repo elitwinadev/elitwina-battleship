@@ -198,6 +198,7 @@ export default OpponentGrid;
 
 const OpponentGridWrapper = styled(GridWrapper)`
   @media only screen and (max-width: 600px) {
-    ${(props) => (props.isMyTurn ? `display: grid` : `display: none`)};
+    ${(props) => (!props.isGameStarted ? 'display: none' : ' ')};
+    ${(props) => (props.isMyTurn ? `display: grid; display: -ms-grid;` : `display: none`)};
   }
 `;

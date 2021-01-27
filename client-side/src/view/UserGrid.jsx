@@ -28,6 +28,7 @@ const UserGrid = () => {
     lockOtherPlayerBoard,
     bothPlayersReady,
     isMyTurn,
+    isGameStarted
   } = useContext(BsContext);
 
   // *** for reordering ships functionality (Not implemented yet)
@@ -46,8 +47,8 @@ const UserGrid = () => {
       return ships[pixel.shipIndex].isSunk
         ? SINK
         : pixel.isHit
-        ? HIT
-        : pixel.value;
+          ? HIT
+          : pixel.value;
     }
     return pixel.value;
   };
@@ -77,6 +78,7 @@ const UserGrid = () => {
 
   return (
     <UserGridWrapper
+      isGameStarted={isGameStarted}
       bothPlayersConnected={bothPlayersConnected}
       lockOtherPlayerBoard={lockOtherPlayerBoard}
       bothPlayersReady={bothPlayersReady}
@@ -122,12 +124,16 @@ const UserGrid = () => {
 export default UserGrid;
 
 const UserGridWrapper = styled(GridWrapper)`
-  @media only screen and (max-width: 600px) {
-    ${(props) =>
-      !props.lockOtherPlayerBoard ? `display: none;` : `display: grid`};
-    ${({ bothPlayersConnected, bothPlayersReady }) =>
-      bothPlayersConnected && !bothPlayersReady
-        ? `position: absolute; top: 50vw`
-        : " "}
+@media only screen and (max-width: 600px) {
+  ${({ bothPlayersConnected, lockOtherPlayerBoard }) => !lockOtherPlayerBoard || !bothPlayersConnected ? `display: none;` : ` `};
+  ${({ bothPlayersConnected, isPlayerReady }) =>
+  bothPlayersConnected && !isPlayerReady
+    ? `margin-top: 39vw;`
+    : " "}
+
+
+
   }
-`;
+  `;
+
+  // 

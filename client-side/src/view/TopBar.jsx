@@ -28,7 +28,7 @@ const TopBar = () => {
     if (isGameStarted) {
       if (isMyTurn) {
         setTimeout(() => {
-          window.navigator.vibrate(200);
+          // window.navigator.vibrate(200);
           playSound("YOURTURN", playSounds);
         }, 1000);
       } else {

@@ -34,6 +34,7 @@ let users = 0;
 
 io.sockets.on("connection", (socket) => {
   users++;
+  console.log("connected: ", socket.id)
   io.emit("data", { usersCount: users });
 
   /// player disconnected.

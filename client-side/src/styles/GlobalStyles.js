@@ -10,26 +10,24 @@ const GlobalStyles = createGlobalStyle`
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    zoom: 120%;
+    zoom: 80%;
     -moz-transform: scale(0.8);
-    @media only screen and (min-width: 600px) {
-      {zoom: 85%}
-    }
-  
-  body {
     ${flex()};
     font-family: 'Rajdhani', sans-serif;
     color: white;
     font-size: 25px;
+    @media only screen and (max-width: 600px) {
+      {zoom: 120%}
     }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-user-select: none
-      -ms-user-select: none;
-      user-select: none;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-user-select: none
+    -ms-user-select: none;
+    user-select: none;
     }
 `;
 
@@ -107,7 +105,7 @@ export const MissHit = styled(StandardPixel)`
   border: 0.1vw solid #00ff41;
   background: #00ff41;
   opacity: 0.3;
-  font-size: 5vw;
+  font-size: 3vw;
   animation: ${(props) =>
     props.isAnimated
       ? css`
@@ -120,13 +118,13 @@ export const AroundSink = styled(StandardPixel)`
   border: 0.1vw solid #00ff41;
   background: red;
   opacity: 0.3;
-  font-size: 5vw;
+  font-size: 3vw;
 `;
 
 export const ShipHit = styled(StandardPixel)`
   background: rgba(255, 153, 153, 0.5);
   color: red;
-  font-size: 5vw;
+  font-size: 3vw;
   animation: ${(props) =>
     props.isAnimated
       ? css`
@@ -156,38 +154,72 @@ export const ShipPart = styled(StandardPixel)`
 // UserGrid + OpponentGrid components:
 
 export const GridWrapper = styled.div`
-  border: none;
-  height: 100%;
-  width: 100%;
-  color: white;
-  display: grid;
-  justify-content: center;
-  grid-template-areas:
-    "header header"
-    "progressBar progressBar"
-    "emptyPixel lettersBar"
-    "numbersBar grid";
-  @media only screen and (max-width: 600px) {
-    padding-top: 5vw;
-    zoom: 125%;
-  }
+border: none;
+height: 100%;
+width: 100%;
+color: white;
+display: grid;
+display: -ms-grid;
+-webkit-box-pack: center;
+    -ms-flex-pack: center;
+        justify-content: center;
+    grid-template-areas:
+  "header header"
+  "progressBar progressBar"
+  "emptyPixel lettersBar"
+  "numbersBar grid";
+@media only screen and (max-width: 600px) {
+  padding-top: 5vw;
+  zoom: 125%;
+}
+  // border: none;
+  // height: 100%;
+  // width: 100%;
+  // color: white;
+  // display: grid;
+  // display: -ms-grid;
+  // justify-content: center;
+  // grid-template-areas:
+  //   "header header"
+  //   "progressBar progressBar"
+  //   "emptyPixel lettersBar"
+  //   "numbersBar grid";
+  // @media only screen and (max-width: 600px) {
+  //   padding-top: 5vw;
+  //   zoom: 125%;
+  // }
 `;
 
 export const PlayerGrid = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  height: 40vw;
-  width: 40vw;
-  color: #003b00;
-  grid-area: grid;
-  @media only screen and (max-width: 600px) {
-    height: 50vw;
-    width: 50vw;
-  }
-  opacity: ${({ lockOtherPlayerBoard }) =>
-    lockOtherPlayerBoard ? "0.3" : "1"};
-`;
-
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+height: 40vw;
+width: 40vw;
+color: #003b00;
+grid-area: grid;
+@media only screen and (max-width: 600px) {
+  height: 50vw;
+  width: 50vw;
+margin-bottom: 80vw;
+}
+opacity: ${({ lockOtherPlayerBoard }) =>
+  lockOtherPlayerBoard ? "0.3" : "1" };
+  `
+  // display: flex;
+  // flex-wrap: wrap;
+  // height: 40vw;
+  // width: 40vw;
+  // color: #003b00;
+  // grid-area: grid;
+  // @media only screen and (max-width: 600px) {
+  //   height: 50vw;
+  //   width: 50vw;
+  // }
+  // opacity: ${({ lockOtherPlayerBoard }) =>
+  //   lockOtherPlayerBoard ? "0.3" : "1"};
 export const OtherPlayerGrid = styled(PlayerGrid)`
   cursor: ${({ lockOtherPlayerBoard }) =>
     lockOtherPlayerBoard ? "not-allowed" : "pointer"};

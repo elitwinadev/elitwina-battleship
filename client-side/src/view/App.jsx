@@ -28,18 +28,18 @@ const App = () => {
       !window["safari"] ||
         (typeof safari !== "undefined" && window["safari"].pushNotification)
     );
-  if (isSafari)
-    return (
-      <>
-        <Box>
-          <span>Ooops...</span>
-          <br />
-          <br/>
-          Your browser not supported!
-          We recommend using Google Chrome
-        </Box>
-      </>
-    );
+  // if (isSafari)
+  //   return (
+  //     <>
+  //       <Box>
+  //         <span>Ooops...</span>
+  //         <br />
+  //         <br/>
+  //         Your browser not supported!
+  //         We recommend using Google Chrome
+  //       </Box>
+  //     </>
+  //   );
   return (
     <AppWrapper
       isMyTurn={!lockOtherPlayerBoard}
@@ -71,8 +71,18 @@ export default App;
 
 const GameWrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  flex-direction: ${(props) => (props.isMyTurn ? "column" : "column-reverse")};
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  flex-direction: ${(props) => (!props.isMyTurn ? 
+    `
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: reverse;
+        -ms-flex-direction: column-reverse;
+            flex-direction: column-reverse;
+    `
+     : ' ')};
   padding-top: 10vw;
   @media only screen and (min-width: 600px) {
     flex-direction: row;
@@ -82,6 +92,8 @@ const GameWrapper = styled.div`
 const AppWrapper = styled.div`
   position: relative;
   @media only screen and (max-width: 600px) {
+    height: 100vw;
+    width: 100%;
     margin: 1vw;
     ${(props) =>
       !props.isMyTurn && props.isGameStarted && !props.gameOverMsg
@@ -95,12 +107,24 @@ const AppWrapper = styled.div`
     padding-left: 0vw;
     padding: 0.5vw;
   }
+
 `;
 const Box = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vw;
-  width: 100vw;
-  flex-direction: column;
+
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-pack: center;
+    -ms-flex-pack: center;
+        justify-content: center;
+-webkit-box-align: center;
+   -ms-flex-align: center;
+       align-items: center;
+height: 100vw;
+width: 100vw;
+-webkit-box-orient: vertical;
+-webkit-box-direction: normal;
+   -ms-flex-direction: column;
+       flex-direction: column;
+
 `;
