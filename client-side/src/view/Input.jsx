@@ -1,14 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
 import { BsContext, playSound } from "../stateManager/stateManager";
 import { MdContentCopy } from "react-icons/md";
-import { flash, __esModule } from "react-animations";
+import { flash, bounceInLeft, __esModule } from "react-animations";
 import { Button } from "../styles/GlobalStyles";
 import { nanoid } from "nanoid";
-import FadeoutStatus from "./FadeoutStatus";
-import { useHistory } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
-import { flex, position, cool_shining_green } from "../styles/Mixins";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { position, cool_shining_green } from "../styles/Mixins";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useHistory,
+} from "react-router-dom";
 import Loader from "react-loader-spinner";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import {
@@ -19,6 +23,8 @@ import {
 import { FacebookIcon, FacebookMessengerIcon, WhatsappIcon } from "react-share";
 
 const flashAnimation = keyframes`${flash}`;
+const bounceInLeftAnimation = keyframes`${bounceInLeft}`;
+
 const startGame = (props) => {
   const {
     setIsConnected,
@@ -26,18 +32,46 @@ const startGame = (props) => {
     setShowReadyBox,
     setShowStartButton,
   } = useContext(BsContext);
-  let { gameId } = props.match.params;
-  setShowReadyBox(true);
-  setIsConnected(true);
-  setPlayerRoom(gameId);
-  setShowStartButton(false);
+
+  useEffect(() => {
+    let { gameId } = props.match.params;
+    setShowReadyBox(true);
+    setIsConnected(true);
+    setPlayerRoom(gameId);
+    setShowStartButton(false);
+  }, []);
 
   return <h1></h1>;
+};
+
+const Scores = () => {
+  const { scores, gameOverMsg } = useContext(BsContext);
+  const [userScoresFlash, setUserScoresFlash] = useState(false);
+  const [userScores, setUserScores] = useState(0);
+
+  useEffect(() => {
+    let i = 0;
+    let myScores = scores;
+    let scoresInterval = setInterval(() => {
+      if (i < 100) {
+        i++;
+        setUserScores(myScores + i);
+      } else {
+        setUserScoresFlash(true);
+        clearInterval(scoresInterval);
+        return false;
+      }
+    }, 10);
+  }, []);
+  if (gameOverMsg !== "YOU WON!!!" || !localStorage.getItem("token")) {
+    return <div></div>;
+  }
+  if (userScoresFlash) return <H1>{userScores}</H1>;
+  return <H1NoFlash>{userScores}</H1NoFlash>;
 };
 const Input = () => {
   const {
     playerRoom,
-    setShowStartButton,
     showStartButton,
     bothPlayersConnected,
     otherPlayerShips,
@@ -65,9 +99,10 @@ const Input = () => {
     setGameOverMsg,
     playSounds,
     playAgainMsg,
+    setBeforeBoardSet,
+    setPlayAgainMsg,
   } = useContext(BsContext);
   const history = useHistory();
-  // local states:
   const [roomId, setRoomId] = useState(null);
 
   //
@@ -94,7 +129,7 @@ const Input = () => {
   useEffect(() => {
     if (noteStatus) {
       setTimeout(() => {
-        setNoteStatus('');
+        setNoteStatus("");
       }, 1000);
     }
   }, [noteStatus]);
@@ -108,8 +143,8 @@ const Input = () => {
   // ready to play
   const readyButton = () => {
     playSound("click", playSounds);
+    setBeforeBoardSet(false);
     setIsPlayerReady(true);
-    setShowReadyBox(false);
   };
 
   // set the board randomly
@@ -120,49 +155,64 @@ const Input = () => {
 
   // set the game status message
   useEffect(() => {
-    if (otherPlayerShips && !isPlayerReady) {
+    if (
+      !isGameStarted &&
+      bothPlayersConnected &&
+      !isPlayerReady &&
+      !otherPlayerShips
+    ) {
+      setGameStatus(
+        <span>
+          You are both connected!
+          <br />
+          Please set your board, then press ready.
+        </span>
+      );
+    } else if (showReadyBox && !bothPlayersConnected) {
+      setGameStatus(
+        <span>
+          You are connected!
+          <br />
+          <br />
+          Waiting for another player to connect...
+        </span>
+      );
+      setWaiting(true);
+    } else if (otherPlayerShips && !isPlayerReady) {
       setGameStatus("Your opponent is ready!");
       setWaiting(false);
-      return false;
-    }
-    if (setShowStartButton) {
-      setGameStatus(
-        "Please copy the room ID and send it to your friend, Then press start."
-      );
-    }
-    if (isPlayerReady && !otherPlayerShips) {
-      setGameStatus("Waiting for your opponent to be ready...");
-      setShowReadyBox(false);
-      setWaiting(true);
-      return false;
-    }
-    if (showReadyBox && !bothPlayersConnected) {
-      setGameStatus(
-        "You are connected! Waiting for another player to connect..."
-      );
-      setWaiting(true);
-    }
-    if (isPlayerReady && otherPlayerShips) {
+    } else if (
+      isPlayerReady &&
+      otherPlayerShips &&
+      !showReadyBox &&
+      !isGameStarted
+    ) {
       setWaiting(false);
-      setGameStatus("You are good to go! Good luck!");
+      setBothPlayersReady(true);
       setShowReadyBox(false);
+      setPlayAgain(false);
+      setPlayAgainMsg(false);
+      setGameStatus(
+        <span>
+          You are good to go!
+          <br />
+          Good luck!
+        </span>
+      );
       setTimeout(() => {
         setIsGameStarted(true);
-        setBothPlayersReady(true);
       }, 2000);
-      return false;
-    }
-    if (!lockOtherPlayerBoard && isGameStarted) {
+    } else if (showReadyBox && isPlayerReady && !bothPlayersReady) {
+      setWaiting(true);
+      setGameStatus("Waiting for your opponent to be ready...");
+      setShowReadyBox(false);
+    } else if (!lockOtherPlayerBoard && isGameStarted) {
       setGameStatus("Its your turn");
     } else if (lockOtherPlayerBoard && isGameStarted) {
       setGameStatus("");
-    } else if (showReadyBox && bothPlayersConnected) {
-      setGameStatus(
-        "You are both connected! Please set your board. then press ready."
-      );
     }
   }, [
-    setShowStartButton,
+    showStartButton,
     showReadyBox,
     bothPlayersConnected,
     isPlayerReady,
@@ -170,17 +220,15 @@ const Input = () => {
     bothPlayersReady,
     lockOtherPlayerBoard,
   ]);
-
   // set the game over message according to the player status (winning / losing)
   useEffect(() => {
     if (winning != null) {
       if (winning === true) {
         setGameOverMsg("YOU WON!!!");
-        playSound('YOUWON', playSounds);
-      }
-      else {
+        playSound("YOUWON", playSounds);
+      } else {
         setGameOverMsg("you lose");
-        playSound('YOULOSE', playSounds);
+        playSound("YOULOSE", playSounds);
       }
     }
   }, [winning]);
@@ -192,38 +240,37 @@ const Input = () => {
         <>
           <UrlHolder>
             <CopyButton onClick={() => copyId()}>
-              {" "}
-              {<MdContentCopy />}{" "}
+              <MdContentCopy />
             </CopyButton>
             {window.location.origin}/{roomId}
           </UrlHolder>
           <ButtonsWrapper>
-            <Button style={{ width: "4.5vw", height: "4.5vw" }}>
+            <Button style={{ width: "5vw", height: "5vw" }}>
               <FacebookShareButton url={`${window.location.origin}/${roomId}`}>
                 <FacebookIcon
                   size={"5vw"}
                   round={true}
-                  style={{ marginTop: "0.7vw" }}
+                  style={{ marginTop: "1vh" }}
                 />
               </FacebookShareButton>
             </Button>
-            <Button style={{ width: "4.5vw", height: "4.5vw" }}>
+            <Button style={{ width: "5vw", height: "5vw" }}>
               <FacebookMessengerShareButton
                 url={`${window.location.origin}/${roomId}`}
               >
                 <FacebookMessengerIcon
                   size={"5vw"}
                   round={true}
-                  style={{ marginTop: "0.7vw" }}
+                  style={{ marginTop: "1vh" }}
                 />
               </FacebookMessengerShareButton>
             </Button>
-            <Button style={{ width: "4.5vw", height: "4.5vw" }}>
+            <Button style={{ width: "5vw", height: "5vw" }}>
               <WhatsappShareButton url={`${window.location.origin}/${roomId}`}>
                 <WhatsappIcon
                   size={"5vw"}
                   round={true}
-                  style={{ marginTop: "0.7vw" }}
+                  style={{ marginTop: "1vw" }}
                 />
               </WhatsappShareButton>
             </Button>
@@ -250,6 +297,7 @@ const Input = () => {
     if (!isLeave) {
       playSound("click", playSounds);
       setPlayAgain(true);
+      setPlayAgainMsg(false);
       location.reload();
     } else {
       playSound("ERROR", playSounds);
@@ -257,19 +305,25 @@ const Input = () => {
   };
   return (
     <>
-      <FadeoutStatus />
-      <InputWrapper
-        connected={playerRoom}
-        bothPlayersConnected={bothPlayersConnected}
-        gameOverMsg={gameOverMsg}
-        isGameStarted={isGameStarted}
-        showReadyBox={showReadyBox}
-      >
-        {!gameOverMsg ? (
-          <MiniWrapper bothPlayersConnected={bothPlayersConnected} bothPlayersReady={bothPlayersReady}>
+      {!isGameStarted && (
+        <InputWrapper
+          isPlayerReady={isPlayerReady}
+          connected={playerRoom}
+          bothPlayersConnected={bothPlayersConnected}
+          gameOverMsg={gameOverMsg}
+          isGameStarted={isGameStarted}
+          showReadyBox={showReadyBox}
+          bothPlayersReady={bothPlayersReady}
+          otherPlayerShips={otherPlayerShips}
+        >
+          <MiniWrapper
+            isGameStarted={isGameStarted}
+            bothPlayersConnected={bothPlayersConnected}
+            bothPlayersReady={bothPlayersReady}
+          >
             <StaticStatus>
               {gameStatus}
-              {waiting ? (
+              {waiting && (
                 <Loader
                   type="Grid"
                   color="white"
@@ -277,22 +331,26 @@ const Input = () => {
                   width={"5vw"}
                   style={{ margin: "1vw" }}
                 />
-              ) : (
-                  " "
-                )}
+              )}
             </StaticStatus>
             {renderDecideder()}
           </MiniWrapper>
-        ) : (
-            <GameOver>
-              {gameOverMsg}
-              <Button onClick={newGame}>New Game!</Button>
-              <PlayAgainButton error={isLeave} onClick={() => playAgainFunc()}>
-                {playAgainMsg ? <Flash>Play Again!</Flash> : "Play Again!"}
-              </PlayAgainButton>
-            </GameOver>
-          )}
-      </InputWrapper>
+        </InputWrapper>
+      )}
+      {gameOverMsg && (
+        <GameOver>
+          {gameOverMsg}
+          <Scores />
+          <Button onClick={newGame}>New Game!</Button>
+          <PlayAgainButton error={isLeave} onClick={() => playAgainFunc()}>
+            {playAgainMsg && !isLeave ? (
+              <Flash>Play Again!</Flash>
+            ) : (
+              "Play Again!"
+            )}
+          </PlayAgainButton>
+        </GameOver>
+      )}
       <Switch>
         <Route path="/:gameId" component={startGame} />
       </Switch>
@@ -302,39 +360,19 @@ const Input = () => {
 export default Input;
 
 const InputWrapper = styled.div`
-  ${({ isGameStarted, gameOverMsg, isConnected }) =>
-    isGameStarted && !gameOverMsg
-      ? "display: none"
-      : isConnected
-        ? flex("center", false)
-        : flex()};
-  position: absolute;
-  top: 12vw;
-  right: 3vw;
-  z-index: 100;
-  height: 60vw;
-  width: 125vw;
+  animation: 2s ${bounceInLeftAnimation};
+  animation-iteration-count: 1;
+  display: flex;
   justify-content: center;
   background: rgba(0, 0, 0, 0.8);
-  ${({ showReadyBox, bothPlayersConnected }) =>
-    showReadyBox && bothPlayersConnected
-      ? "background: black; right: 0vw; width: 50%;"
-      : " "}
+  margin: 5vw;
   @media only screen and (max-width: 600px) {
-    width: 100%;
     background: rgba(0, 0, 0, 0.8);
-    opacity: 1;
-    height: 40%;
-    margin-top: 6vw;
-    left: 0;
-    ${({ bothPlayersConnected }) =>
-    bothPlayersConnected
-      ? `width: 80vw; top: 7vw; margin-left: -19vw;`
-      : " "};
-  }
+  } ;
 `;
 
 const MiniWrapper = styled.form`
+  height: 60vh;
   display: flex;
   flex-direction: column;
   ${cool_shining_green};
@@ -342,43 +380,36 @@ const MiniWrapper = styled.form`
   -webkit-box-shadow: 2px 3px 16px 5px rgba(0, 255, 65, 0.75);
   box-shadow: 2px 3px 16px 5px rgba(0, 255, 65, 0.75);
   border-radius: 2vw;
-  -webkit-user-select: none;
-  -ms-user-select: none;
   user-select: none;
-  display: flex;
   align-items: center;
   justify-content: center;
   z-index: 100;
   background: black;
   align-content: center;
-  padding: 2%;
+  padding: 5%;
   @media only screen and (max-width: 600px) {
-    width: 50vw;
-    height: 50vw;
-    margin-left: 23vw;
-    margin-top: 16vw;
-    width: 50vw;
-    margin-left: ${(props) => (!props.bothPlayersConnected ? "0vw" : ' ')};
-  }
-
+    width: 80vw;
+  } ;
 `;
 
-const CopyButton = styled.button`
+const CopyButton = styled(Button)`
+  ${cool_shining_green};
   font-size: 100%;
-  ${position("relative", false, false, false, "95%")};
-
+  width: 4vw;
+  height: 4vw;
+  margin: -2vw;
+  ${position("relative", false, false, false, "98%")};
   &:hover {
-    ${cool_shining_green};
-    background: #1aff1a;
     color: black;
   }
 `;
 
 const UrlHolder = styled.div`
   padding: 1vw;
+  padding-left: -8vw;
   margin: 1vw;
   height: 4vw;
-  width: 100%;
+  width: 90%;
   outline: none;
   border-radius: 4rem;
   border: white 1px solid;
@@ -387,11 +418,23 @@ const UrlHolder = styled.div`
   z-index: 1;
   align-items: center;
   display: flex;
+  @media only screen and (max-width: 600px) {
+    height: 4vh;
+    font-size: 3vw;
+  }
 `;
 const Flash = styled.h1`
   animation: 1s ${flashAnimation};
   animation-iteration-count: infinite;
-  font-size: 2.5vw;
+  font-size: 2vw;
+  @media only screen and (max-width: 600px) {
+    font-size: 4vw;
+  }
+`;
+const H1 = styled.h1`
+  animation: 1s ${flashAnimation};
+  animation-iteration-count: infinite;
+  font-size: 4vw;
 `;
 
 const StaticStatus = styled.h1`
@@ -402,24 +445,27 @@ const StaticStatus = styled.h1`
   -ms-user-select: none;
   user-select: none;
   font-size: 3vw;
+  font-weight: normal;
   width: 40vw;
   display: flex;
   flex-direction: column;
+  @media only screen and (max-width: 600px) {
+    font-size: 5vw;
+    width: 100%;
+  }
 `;
 
 const GameOver = styled.div`
-  width: 125vw;
-  height: 55vw;
-  position: absolute;
+  width: 100%;
+  height: 100%;
   top: 0;
   right: 0;
+  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
   font-weight: bold;
   background: rgba(0, 0, 0, 0.8);
-  -webkit-user-select: none;
-  -ms-user-select: none;
   user-select: none;
   font-size: 20vw;
   flex-direction: column;
@@ -429,12 +475,9 @@ const GameOver = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 68vw;
-    left: 18vw;
-    height: 90vw;
     top: 0vw;
     background: black;
-  }
+  } ;
 `;
 
 const ButtonsWrapper = styled.div`
@@ -445,18 +488,20 @@ const ButtonsWrapper = styled.div`
 `;
 const PlayAgainButton = styled(Button)`
   margin-top: -0.5vw;
-  background: ${(props) => (props.error ? "grey" : " ")};
-  cursor: ${(props) => (props.error ? "not-allowed" : "pointer")};
-  border: ${(props) => (props.error ? "none" : " ")};
+  background: ${({ error }) => error && `grey`};
+  cursor: ${({ error }) => (error ? `not-allowed` : `pointer`)};
+  border: ${({ error }) => error && `none`};
   &:hover {
-    color: ${(props) => (props.error ? "white" : "black")};
-    background: ${(props) => (props.error ? "grey" : " ")};
-    border: ${(props) => (props.error ? "none" : " ")};
-    box-shadow: ${(props) =>
-    props.error ? "inset 0 0.1rem 1.5rem lightgrey" : " "};
+    color: ${({ error }) => (error ? `white` : `black`)};
+    background: ${({ error }) => error && `grey`};
+    border: ${({ error }) => error && `none`};
+    box-shadow: ${({ error }) => error && `inset 0 0.1rem 1.5rem lightgrey`};
   }
   @media only screen and (max-width: 600px) {
     height: 5.5vw;
     width: 20vw;
-  }
+  } ;
+`;
+const H1NoFlash = styled.h1`
+  font-size: 4vw;
 `;

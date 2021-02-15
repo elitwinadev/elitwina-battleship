@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { BsContext } from "../stateManager/stateManager";
 const Sockets = () => {
   const {
@@ -14,10 +14,6 @@ const Sockets = () => {
     isPlayerReady,
     playerGuess,
     setOtherPlayerGuess,
-    playerMessage,
-    setOtherPlayerMessage,
-    chatMessages,
-    setChatMessages,
     winning,
     setWinning,
     setShowModal,
@@ -27,6 +23,23 @@ const Sockets = () => {
     setPlayAgain,
     setIsLeave,
     setPlayAgainMsg,
+    lastMessage,
+    setChatText,
+    chatText,
+    isChatShow,
+    setChatAlert,
+    playSounds,
+    token,
+    detailsChecker,
+    setDetailsChecker,
+    setScores,
+    setUsername,
+    username,
+    isTyping,
+    setIsTyping,
+    setIsOppTyping,
+    lastEmoji,
+    setIncomingReaction,
   } = useContext(BsContext);
 
   const randomize = (min, max) => Math.round(min + Math.random() * (max - min));
@@ -37,9 +50,8 @@ const Sockets = () => {
 
   // joining a room (clicking "start" button)
   useEffect(() => {
-      socket.emit("data", { room: playerRoom, action: PLAY });
+    socket.emit("data", { room: playerRoom, action: PLAY, username: username });
   }, [playerRoom]);
-
   // ready to play (clicking "ready" button)
   useEffect(() => {
     if (isFirstTurn !== null) {
@@ -77,9 +89,23 @@ const Sockets = () => {
   // winning
   useEffect(() => {
     if (winning === true) {
-      socket.emit("data", { room: playerRoom, isWinning: true });
+      socket.emit("data", {
+        room: playerRoom,
+        isWinning: true,
+        token: !token ? "none" : token,
+      });
     }
   }, [winning]);
+  // ask for scores status
+  useEffect(() => {
+    if (detailsChecker === true) {
+      setDetailsChecker(false);
+      socket.emit("data", {
+        action: "DETAILS_CHECKER",
+        token: !token ? "none" : token,
+      });
+    }
+  }, [detailsChecker]);
 
   // ---------------------------------------listening---------------------------------------
 
@@ -93,14 +119,38 @@ const Sockets = () => {
         readyToStart,
         toPlayer,
         guess,
-        message,
         isWinning,
         isLeave,
         usersCount,
         playAgainRequest,
+        incomingMessages,
+        scores,
+        username,
       } = data;
+      if (data.action === "EMOJI") {
+        setIncomingReaction(data.value);
+      }
+      if (data.action === "OPP_TYPING") {
+        setIsOppTyping(data.bol);
+      }
+      if (scores >= 0 || username) {
+        setScores(data.scores);
+        setUsername(data.username);
+        localStorage.setItem("username", data.username);
+        localStorage.setItem("scores", data.scores);
+      }
       if (data === "REFRESH") {
         location.href = window.location.origin;
+      }
+      if (incomingMessages) {
+        let msgObject = {
+          value: incomingMessages,
+          user: "user",
+        };
+        if (!isChatShow) {
+          setChatAlert(true);
+        }
+        setChatText((chatText) => [...chatText, msgObject]);
       }
       if (usersCount) setUsersCounter(usersCount);
       if (playAgainRequest) setPlayAgainMsg(true);
@@ -117,15 +167,6 @@ const Sockets = () => {
         setIsFirstTurn(turn);
       } else if (guess) {
         setOtherPlayerGuess(guess);
-      } else if (message) {
-        setOtherPlayerMessage((prev) => [...prev, message.msg]);
-        setChatMessages((prev) => [
-          ...prev,
-          {
-            id: message.id,
-            msg: message.msg,
-          },
-        ]);
       } else if (isWinning) {
         setWinning(!isWinning);
       } else if (isLeave) {
@@ -141,7 +182,33 @@ const Sockets = () => {
       setPlayAgain(false);
     }
   }, [playAgain]);
-  return <div></div>;
+  useEffect(() => {
+    if (lastMessage) {
+      socket.emit("data", {
+        room: playerRoom,
+        action: "CHATMESSAGE",
+        chatMessages: lastMessage.value,
+      });
+    }
+  }, [lastMessage]);
+  useEffect(() => {
+    if (lastEmoji.value) {
+      socket.emit("data", {
+        room: playerRoom,
+        action: "EMOJI",
+        value: lastEmoji.value,
+      });
+    }
+  }, [lastEmoji]);
+  // ---------------------------------------------------------
+  useEffect(() => {
+    if (isTyping) {
+      socket.emit("data", { room: playerRoom, action: "TYPING", bol: true });
+    } else {
+      socket.emit("data", { room: playerRoom, action: "TYPING", bol: false });
+    }
+  }, [isTyping]);
+  return "";
 };
 
 export default Sockets;

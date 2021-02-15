@@ -1,25 +1,27 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { BsContext } from "../stateManager/stateManager";
 import Sockets from "../sockets/socket-client-side";
 import TopBar from "./TopBar";
 import Input from "./Input";
 import UserGrid from "./UserGrid";
 import OpponentGrid from "./OpponentGrid";
-import { flex, position } from "../styles/Mixins";
 import Confetti from "react-confetti";
 import { BrowserRouter } from "react-router-dom";
 import styled from "styled-components";
 import Chat from "./Chat";
-var isFirefox = typeof InstallTrigger !== 'undefined';
+import Auth from "./Auth";
+import Reactions from "./Reactions";
+
 const App = () => {
   const {
     winning,
     lockOtherPlayerBoard,
-    bothPlayersConnected,
-    showReadyBox,
     isGameStarted,
     gameOverMsg,
   } = useContext(BsContext);
+
+  // safari/firefox browser detecation------------------------------------------------
+  // ---------------------------------------------------------------------------------
   var isSafari =
     /constructor/i.test(window.HTMLElement) ||
     (function (p) {
@@ -28,103 +30,95 @@ const App = () => {
       !window["safari"] ||
         (typeof safari !== "undefined" && window["safari"].pushNotification)
     );
-  // if (isSafari)
-  //   return (
-  //     <>
-  //       <Box>
-  //         <span>Ooops...</span>
-  //         <br />
-  //         <br/>
-  //         Your browser not supported!
-  //         We recommend using Google Chrome
-  //       </Box>
-  //     </>
-  //   );
+  const keyboardShowHandler = () => {
+    alert("keyboard!!!!");
+  };
+  useEffect(() => {
+    window.addEventListener("native.showkeyboard", keyboardShowHandler);
+  }, []);
+  var isFirefox = navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
+  // ----------------------------------------
+
+  if (isSafari || isFirefox) {
+    return (
+      <>
+        <span style={{ fontSize: "50px" }}>
+          Ooops...
+          <br />
+          Your browser not supported!
+          <br />
+          We recommend using Google Chrome
+        </span>
+      </>
+    );
+  }
+  // full app render ---------------------------------------------------
   return (
-    <AppWrapper
-      isMyTurn={!lockOtherPlayerBoard}
-      isGameStarted={isGameStarted}
-      gameOverMsg={gameOverMsg}
-    >
-      <BrowserRouter>
-        {winning ? (
-          <Confetti width="2000vw" height="1000vw" style={{ zIndex: 1000 }} />
-        ) : (
-          " "
-        )}
-        <Sockets />
-        <TopBar />
-        <Input />
-        <GameWrapper isMyTurn={!lockOtherPlayerBoard}>
-          <UserGrid
-            bothPlayersConnected={bothPlayersConnected}
-            showReadyBox={showReadyBox}
-          />
-          <OpponentGrid />
-          <Chat />
-        </GameWrapper>
-      </BrowserRouter>
-    </AppWrapper>
+    <>
+      <Auth />
+      <AppWrapper
+        isMyTurn={!lockOtherPlayerBoard}
+        isGameStarted={isGameStarted}
+        gameOverMsg={gameOverMsg}
+      >
+        <BrowserRouter>
+          {winning && (
+            <Confetti width="2000vw" height="1000vw" style={{ zIndex: 1000 }} />
+          )}
+          <Sockets />
+          <TopBar />
+          <GameWrapper isMyTurn={!lockOtherPlayerBoard}>
+            <UserGrid />
+            <OpponentGrid />
+            <Input />
+          </GameWrapper>
+        </BrowserRouter>
+        <Reactions />
+        <Chat />
+      </AppWrapper>
+    </>
   );
 };
 export default App;
 
 const GameWrapper = styled.div`
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  flex-direction: ${(props) => (!props.isMyTurn ? 
-    `
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: reverse;
-        -ms-flex-direction: column-reverse;
-            flex-direction: column-reverse;
-    `
-     : ' ')};
-  padding-top: 10vw;
-  @media only screen and (min-width: 600px) {
-    flex-direction: row;
-    padding-top: 0;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  @media only screen and (max-width: 600px) {
+    flex-direction: column-reverse;
   }
 `;
 const AppWrapper = styled.div`
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
   @media only screen and (max-width: 600px) {
-    height: 100vw;
-    width: 100%;
-    margin: 1vw;
-    ${(props) =>
-      !props.isMyTurn && props.isGameStarted && !props.gameOverMsg
-        ? "border: 2px solid red"
-        : " "};
-    ${(props) =>
-      props.isMyTurn && props.isGameStarted && !props.gameOverMsg
-        ? `border: 2px solid blue`
-        : " "};
-    padding-right: 0vw;
-    padding-left: 0vw;
-    padding: 0.5vw;
+    ${({ isMyTurn, isGameStarted, gameOverMsg }) =>
+      !isMyTurn && isGameStarted && !gameOverMsg && `border: 3px solid red`};
+    ${({ isMyTurn, isGameStarted, gameOverMsg }) =>
+      isMyTurn && isGameStarted && !gameOverMsg && `border: 3px solid blue`};
+    // margin-bottom: 2vw;
+    margin-right: -2vw;
+    height: 100vh;
   }
-
 `;
+
 const Box = styled.div`
-
-display: -webkit-box;
-display: -ms-flexbox;
-display: flex;
--webkit-box-pack: center;
-    -ms-flex-pack: center;
-        justify-content: center;
--webkit-box-align: center;
-   -ms-flex-align: center;
-       align-items: center;
-height: 100vw;
-width: 100vw;
--webkit-box-orient: vertical;
--webkit-box-direction: normal;
-   -ms-flex-direction: column;
-       flex-direction: column;
-
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  align-items: center;
+  height: 100vw;
+  width: 100vw;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
 `;

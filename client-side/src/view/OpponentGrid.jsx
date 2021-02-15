@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useContext, useEffect, useState, Component } from "react";
 import { BsContext, playSound } from "../stateManager/stateManager";
 import styled, { keyframes } from "styled-components";
 import { inspectHit, hitBoardUpdate, missBoardUpdate } from "../logic/logic";
@@ -79,8 +79,8 @@ const OpponentGrid = () => {
       return ships[pixel.shipIndex].isSunk
         ? SINK
         : pixel.isHit
-          ? HIT
-          : pixel.value;
+        ? HIT
+        : pixel.value;
     }
     return pixel.value;
   };
@@ -147,57 +147,64 @@ const OpponentGrid = () => {
   };
 
   // save all the locked pixels in an array for later checking
-
-  return (
-    <OpponentGridWrapper
-      isMyTurn={!lockOtherPlayerBoard}
-      isGameStarted={isGameStarted}
-    >
-      <GridHeaders>Opponents Board</GridHeaders>
-      <LittleWrapper>
-        <ProgressBar
-          bgcolor="#00FF41"
-          labelColor="grey"
-          completed={opponentPrecents * 5 || 0}
-          width={"30vw"}
-          height={"2vw"}
-          labelSize={"2vw"}
-        />
-      </LittleWrapper>
-      <NumbersBar>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num, i) => (
-          <BarPixel key={i}>{num}</BarPixel>
-        ))}
-      </NumbersBar>
-      <LettersBar>
-        {["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"].map((letter, i) => (
-          <BarPixel key={i}>{letter}</BarPixel>
-        ))}
-      </LettersBar>
-      <OtherPlayerGrid lockOtherPlayerBoard={lockOtherPlayerBoard}>
-        {otherPlayerBoard.map((xArr, Xindex, board) =>
-          xArr.map((yArr, Yindex) => (
-            <OpponentPixel
-              isMyTurn={isMyTurn}
-              lock={isItemLocked(Xindex, Yindex)}
-              key={`g${Yindex}`}
-              status={pixelStatus(Xindex, Yindex, board, otherPlayerShips)}
-              x={Xindex}
-              y={Yindex}
-              clickhandler={onClick}
-            ></OpponentPixel>
-          ))
-        )}
-      </OtherPlayerGrid>
-    </OpponentGridWrapper>
-  );
+  if (isGameStarted) {
+    return (
+      <>
+        <OpponentGridWrapper
+          isMyTurn={!lockOtherPlayerBoard}
+          isGameStarted={isGameStarted}
+        >
+          <GridHeaders>Opponents Board</GridHeaders>
+          <LittleWrapper>
+            <ProgressBar
+              bgcolor="#00FF41"
+              labelColor="grey"
+              completed={opponentPrecents * 5 || 0}
+              width={"30vw"}
+              height={"1.5vw"}
+              labelSize={"1vw"}
+            />
+          </LittleWrapper>
+          <NumbersBar>
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num, i) => (
+              <BarPixel key={i}>{num}</BarPixel>
+            ))}
+          </NumbersBar>
+          <LettersBar>
+            {["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"].map(
+              (letter, i) => (
+                <BarPixel key={i}>{letter}</BarPixel>
+              )
+            )}
+          </LettersBar>
+          <OtherPlayerGrid lockOtherPlayerBoard={lockOtherPlayerBoard}>
+            {otherPlayerBoard.map((xArr, Xindex, board) =>
+              xArr.map((yArr, Yindex) => (
+                <OpponentPixel
+                  isMyTurn={isMyTurn}
+                  lock={isItemLocked(Xindex, Yindex)}
+                  key={`g${Yindex}`}
+                  status={pixelStatus(Xindex, Yindex, board, otherPlayerShips)}
+                  x={Xindex}
+                  y={Yindex}
+                  clickhandler={onClick}
+                ></OpponentPixel>
+              ))
+            )}
+          </OtherPlayerGrid>
+        </OpponentGridWrapper>
+      </>
+    );
+  }
+  return <h1></h1>;
 };
 
 export default OpponentGrid;
 
 const OpponentGridWrapper = styled(GridWrapper)`
+margin-left: 10vw;
   @media only screen and (max-width: 600px) {
-    ${(props) => (!props.isGameStarted ? 'display: none' : ' ')};
-    ${(props) => (props.isMyTurn ? `display: grid; display: -ms-grid;` : `display: none`)};
-  }
+    margin-left: 0;
+    ${({ isGameStarted }) => !isGameStarted && `display: none`};
+    ${({ isMyTurn }) => (isMyTurn ? `display: grid;` : `display: none;`)};
 `;

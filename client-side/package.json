@@ -7,6 +7,9 @@
   "dependencies": {
     "@ramonak/react-progress-bar": "^2.0.0",
     "@react-hook/mouse-position": "^4.1.0",
+    "antd": "^4.12.2",
+    "delay": "^5.0.0",
+    "html2canvas": "^1.0.0-rc.7",
     "nanoid": "^3.1.20",
     "react": "^17.0.1",
     "react-animations": "^1.0.0",
@@ -18,9 +21,12 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-share": "^4.3.1",
+    "react-social-login": "^3.4.10",
     "react-spring": "^8.0.27",
     "socket.io-client": "^3.0.4",
-    "styled-components": "5.2.1"
+    "styled-components": "5.2.1",
+    "use-react-screenshot": "^1.0.2",
+    "use-screenshot-hook": "^1.0.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.6",

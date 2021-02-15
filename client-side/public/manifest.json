@@ -1,0 +1,29 @@
+{
+    "name": "Battleship Game",
+    "short_name": "BS",
+    "theme_color": "black",
+    "background_color": "#202124",
+    "display": "standalone",
+    "scope": "/",
+    "start_url": "/",
+    "permissions": [
+        "background"
+    ],
+    "icons": [
+        {
+            "src": "favicon.ico",
+            "sizes": "64x64 32x32 16x16",
+            "type": "image/x-icon"
+        },
+        {
+            "src": "images/icons/icon192X192.jpg",
+            "type": "image/x-icon",
+            "sizes": "192x192"
+        },
+        {
+            "src": "images/icons/icon512X512.jpg",
+            "type": "image/x-icon",
+            "sizes": "512x512"
+        }
+    ]
+}

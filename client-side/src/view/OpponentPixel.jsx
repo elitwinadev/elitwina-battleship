@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext, Component } from "react";
 import {
   OpponentSquare,
   MissHit,
@@ -18,17 +18,16 @@ import {
 } from "../stateManager/stateManager";
 import "../styles/OnceAnimation.css";
 import { playSound } from "../stateManager/stateManager";
-import { FaTruckMonster } from "react-icons/fa";
 import missImg from "../assests/images/miss.gif";
-const dev = true; // necessary only for dev - let you see the opponent ship
+
+const dev = false; // necessary only for dev - let you see the opponent ship
 
 // checking the pixel status when clicking and render a new one (depends on the pixel status)
 const OpponentPixel = ({ status, x, y, clickhandler, lock, isMyTurn }) => {
   const [isAnimated, setIsAnimated] = useState(true);
   const [isMiddleAnimated, setIsMiddleAnimated] = useState(true);
-  const [isExtraAnimated, setIsExtraAnimated] = useState(true);
-  const { playSounds } = useContext(BsContext);
   const [alreadyPlayed, setAlreadyPlayed] = useState(false);
+  const { playSounds } = useContext(BsContext);
   if (status === SEA) {
     return (
       <OpponentSquare
@@ -46,9 +45,14 @@ const OpponentPixel = ({ status, x, y, clickhandler, lock, isMyTurn }) => {
       setTimeout(() => {
         setIsMiddleAnimated(false);
       }, 3000);
-      return (<img width="10%" height="10%" src={missImg} />)
+      return <img width="10%" height="10%" src={missImg} />;
+    } else {
+      return (
+        <MissHit lock={lock} onClick={() => clickhandler(x, y, lock)}>
+          •
+        </MissHit>
+      );
     }
-    else { return (<MissHit lock={lock} onClick={() => clickhandler(x, y, lock)}>•</MissHit>) }
   } else if (status === HIT) {
     if (isAnimated) {
       if (!alreadyPlayed) {
@@ -60,10 +64,9 @@ const OpponentPixel = ({ status, x, y, clickhandler, lock, isMyTurn }) => {
       }, 3000);
     }
     return (
-      <ShipHit
-        lock={lock}
-        onClick={() => clickhandler(x, y, lock)}>X</ShipHit>
-
+      <ShipHit lock={lock} onClick={() => clickhandler(x, y, lock)}>
+        X
+      </ShipHit>
     );
   } else if (status === SINK) {
     if (isAnimated) {

@@ -27,17 +27,20 @@ const StatusBox = styled.div`
   ${flex()};
   align-self: start;
   position: absolute;
-  font-size: 2rem;
+  font-size: 2vw;
   z-index: 2000000;
   top: ${(props) => props.mouseY}px;
   left: ${(props) => props.mouseX}px;
+  @media only screen and (max-width: 600px) {
+    display: none;
+  }
 `;
 
 const Animated = styled.h1`
   ${flex(false, false)};
   align-content: center;
   animation: 3s ${fadeoutAnimation};
-  font-size: 2rem;
+  font-size: 2vw;
 `;
 
 

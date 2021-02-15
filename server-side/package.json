@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node socket-server-side.js",
-    "dev": "nodemon socket-server-side.js"
+    "start": "node index.mjs",
+    "dev": "nodemon -r dotenv/config index.mjs"
   },
   "keywords": [],
   "author": "",
@@ -15,10 +15,15 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "socket.io": "^3.0.3",
-    "socket.io-client": "^3.0.3"
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.11.15",
+    "passport": "^0.4.1",
+    "passport-facebook": "^3.0.0",
+    "socket.io": "^3.1.1",
+    "socket.io-client": "^3.1.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.6"
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.7"
   }
 }

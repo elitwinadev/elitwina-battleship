@@ -3,15 +3,20 @@ import { placeShips, initialGameBoard, initialShips } from "../logic/logic";
 import io from "socket.io-client";
 import { nanoid } from "nanoid";
 
+// import sinkSound from "../assests/sounds/maor/sink.mp3";
+// import missSound from "../assests/sounds/maor/miss.mp3";
+// import hitSound from "../assests/sounds/maor/hit.mp3";
+// import youWonSound from "../assests/sounds/maor/win.mp3";
 import sinkSound from "../assests/sounds/sinkSound.mp3";
 import missSound from "../assests/sounds/missSound.wav";
+import youWonSound from "../assests/sounds/youWonSound.wav";
 import hitSound from "../assests/sounds/hitSound.wav";
 import errorSound from "../assests/sounds/errorSound.wav";
 import clickSound from "../assests/sounds/clickSound.wav";
 import yourTurnSound from "../assests/sounds/yourTurnSound.wav";
 import notYourTurnSound from "../assests/sounds/notYourTurnSound.wav";
-import youWonSound from "../assests/sounds/youWonSound.wav";
 import youLoseSound from "../assests/sounds/youLoseSound.wav";
+import chatMessageSound from "../assests/sounds/chatMessageSound.wav";
 
 const { REACT_APP_SERVER_URL } = process.env;
 export const socket = io(REACT_APP_SERVER_URL);
@@ -59,6 +64,9 @@ export const playSound = (event, playSounds) => {
       case "YOULOSE":
         SOUND = youLoseSound;
         break;
+      case "CHATMESSAGE":
+        SOUND = chatMessageSound;
+        break;
       default:
         SOUND = clickSound;
     }
@@ -79,14 +87,13 @@ const StateManager = ({ children }) => {
   const [isPlayerReady, setIsPlayerReady] = useState(false);
   const [bothPlayersReady, setBothPlayersReady] = useState(false);
   const [noteStatus, setNoteStatus] = useState(null);
-  const [gameStatus, setGameStatus] = useState("Welcome");
+  const [gameStatus, setGameStatus] = useState(
+    "Please copy the room ID and send it to your friend, Then press start."
+  );
   const [userPrecents, setUserPrecents] = useState(0);
   const [opponentPrecents, setOpponentPrecents] = useState(0);
   const [playerGuess, setPlayerGuess] = useState(null);
   const [otherPlayerGuess, setOtherPlayerGuess] = useState(null);
-  const [playerMessage, setPlayerMessage] = useState([]);
-  const [otherPlayerMessage, setOtherPlayerMessage] = useState([]);
-  const [chatMessages, setChatMessages] = useState([]);
   const [playerId, setPlayerId] = useState(nanoid(5));
   const [lockOtherPlayerBoard, setLockOtherPlayerBoard] = useState(true);
   const [winning, setWinning] = useState(null);
@@ -105,8 +112,25 @@ const StateManager = ({ children }) => {
   const [mouseY, setMouseY] = useState(0);
   const [isMyTurn, setIsMyTurn] = useState(false);
   const [playSounds, setPlaySounds] = useState(true);
-  const [chatContent, setChatContent] = useState([]);
-
+  const [chatText, setChatText] = useState([]);
+  const [lastMessage, setLastMessage] = useState(null);
+  const [isChatShow, setIsChatShow] = useState(false);
+  const [chatAlert, setChatAlert] = useState(false);
+  const [beforeBoardSet, setBeforeBoardSet] = useState(false);
+  const [userId, setUserId] = useState();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userDetails, setUserDetails] = useState(null);
+  const [token, setToken] = useState(null);
+  const [isLoginShow, setIsLoginShow] = useState(false);
+  const [detailsChecker, setDetailsChecker] = useState(false);
+  const [scores, setScores] = useState(localStorage.getItem("scores"));
+  const [username, setUsername] = useState(localStorage.getItem("username"));
+  const [isRegisterShow, setIsRegisterShow] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [isOppTyping, setIsOppTyping] = useState(false);
+  const [lastEmoji, setLastEmoji] = useState({});
+  const [reactions, setReactions] = useState([]);
+  const [incomingReaction, setIncomingReaction] = useState();
   useEffect(() => {
     let { board, ships } = placeShips(initialGameBoard(), initialShips());
     setPlayerShips(ships);
@@ -130,9 +154,7 @@ const StateManager = ({ children }) => {
     opponentPrecents,
     playerGuess,
     otherPlayerGuess,
-    playerMessage,
-    otherPlayerMessage,
-    chatMessages,
+    chatText,
     playerId,
     lockOtherPlayerBoard,
     winning,
@@ -151,7 +173,24 @@ const StateManager = ({ children }) => {
     isMyTurn,
     playSounds,
     playAgainMsg,
-    chatContent
+    lastMessage,
+    isChatShow,
+    chatAlert,
+    beforeBoardSet,
+    userId,
+    isAuthenticated,
+    userDetails,
+    token,
+    isLoginShow,
+    detailsChecker,
+    scores,
+    username,
+    isRegisterShow,
+    isTyping,
+    isOppTyping,
+    lastEmoji,
+    reactions,
+    incomingReaction,
   };
 
   const action = {
@@ -171,9 +210,7 @@ const StateManager = ({ children }) => {
     setOpponentPrecents,
     setPlayerGuess,
     setOtherPlayerGuess,
-    setPlayerMessage,
-    setOtherPlayerMessage,
-    setChatMessages,
+    setChatText,
     setPlayerId,
     setLockOtherPlayerBoard,
     setWinning,
@@ -192,7 +229,24 @@ const StateManager = ({ children }) => {
     setIsMyTurn,
     setPlaySounds,
     setPlayAgainMsg,
-    setChatContent
+    setLastMessage,
+    setIsChatShow,
+    setChatAlert,
+    setBeforeBoardSet,
+    setUserId,
+    setIsAuthenticated,
+    setUserDetails,
+    setToken,
+    setIsLoginShow,
+    setDetailsChecker,
+    setScores,
+    setUsername,
+    setIsRegisterShow,
+    setIsTyping,
+    setIsOppTyping,
+    setLastEmoji,
+    setReactions,
+    setIncomingReaction,
   };
 
   const ws_connection = {

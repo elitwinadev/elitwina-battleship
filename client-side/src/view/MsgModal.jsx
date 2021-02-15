@@ -1,34 +1,41 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useEffect } from "react";
 import { BsContext } from "../stateManager/stateManager";
 import { Button } from "../styles/GlobalStyles";
 import styled from "styled-components";
 import { flex, position } from "../styles/Mixins";
 
 const Modal = () => {
-  const { setShowModal } = useContext(BsContext);
+  const { setShowModal, showModal, gameOverMsg } = useContext(BsContext);
+  const okRef = useRef(null);
 
   // hide the modal and reload the page
   const okButton = () => {
     setShowModal(false);
     location.href = window.location.origin;
   };
-  const okRef = useRef(null);
-  setTimeout(() => {
-    okRef.current.focus();
-  }, 500);
-  return (
-    <ModalWrapper>
-      <Dialog>
-        <span style={{ fontSize: "3.5vw" }}>
-          Your opponent left the game.
+  useEffect(() => {
+    if (showModal) {
+      setTimeout(() => {
+        okRef.current.focus();
+      }, 500);
+    }
+  }, [showModal])
+  if (showModal && !gameOverMsg) {
+    return (
+      <ModalWrapper>
+        <Dialog>
+          <span style={{ fontSize: "3.5vw" }}>
+            Your opponent left the game.
         </span>
-        <br />
-        <Button ref={okRef} onClick={() => okButton()}>
-          OK
+          <br />
+          <Button ref={okRef} onClick={() => okButton()}>
+            OK
         </Button>
-      </Dialog>
-    </ModalWrapper>
-  );
+        </Dialog>
+      </ModalWrapper>
+    )
+  }
+  return <h1></h1>;
 };
 
 export default Modal;
@@ -46,7 +53,7 @@ const ModalWrapper = styled.div`
     right: 0vw;
     background: black;
     height: 120%;
-  }
+  };
 `;
 
 const Dialog = styled.div`
@@ -55,4 +62,8 @@ const Dialog = styled.div`
   height: 30vw;
   width: 60vw;
   background: grey;
+  @media only screen and (max-width: 600px) {
+    width: 90%;
+    height: 20%;
+  }
 `;
